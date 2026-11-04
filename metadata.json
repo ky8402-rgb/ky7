@@ -1,0 +1,6 @@
+{
+  "name": "ChannelForge AI — Complete YouTube Channel Studio & Growth Engine",
+  "description": "End-to-end AI studio to find profitable faceless niches, craft channel branding, generate viral 60-day roadmaps, write high-retention video scripts, design high-CTR thumbnails, and monetize from zero subscribers.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
