@@ -1606,6 +1606,7 @@ export default function App() {
           <SeoStep
             seo={seo}
             videoTitle={activeVideoTitle}
+            script={script}
             onSelectTitleVariant={(title) => {
               setActiveVideoTitle(title);
               setScript(prev => ({ ...prev, title }));

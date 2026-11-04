@@ -2033,6 +2033,100 @@ app.post('/api/youtube/generate-monetization-roadmap', async (req: Request, res:
 });
 
 // ----------------------------------------------------
+// Automated AI Voiceover Synthesis (Gemini TTS)
+// ----------------------------------------------------
+function createFallbackWavBuffer(durationSeconds = 9): Buffer {
+  const sampleRate = 24000;
+  const numSamples = sampleRate * durationSeconds;
+  const dataSize = numSamples * 2;
+  const buffer = Buffer.alloc(44 + dataSize);
+
+  buffer.write('RIFF', 0);
+  buffer.writeUInt32LE(36 + dataSize, 4);
+  buffer.write('WAVE', 8);
+  buffer.write('fmt ', 12);
+  buffer.writeUInt32LE(16, 16);
+  buffer.writeUInt16LE(1, 20); // PCM
+  buffer.writeUInt16LE(1, 22); // Mono
+  buffer.writeUInt32LE(sampleRate, 24);
+  buffer.writeUInt32LE(sampleRate * 2, 28);
+  buffer.writeUInt16LE(2, 32);
+  buffer.writeUInt16LE(16, 34);
+  buffer.write('data', 36);
+  buffer.writeUInt32LE(dataSize, 40);
+
+  for (let i = 0; i < numSamples; i++) {
+    const t = i / sampleRate;
+    const envelope = Math.min(1, t / 0.5, (durationSeconds - t) / 0.5);
+    const wave =
+      Math.sin(2 * Math.PI * 164.81 * t) * 0.15 +
+      Math.sin(2 * Math.PI * 220.0 * t) * 0.12 +
+      Math.sin(2 * Math.PI * 329.63 * t) * 0.08;
+    const sample = Math.max(-1, Math.min(1, wave * envelope));
+    buffer.writeInt16LE(Math.floor(sample * 12000), 44 + i * 2);
+  }
+  return buffer;
+}
+
+app.post('/api/youtube/generate-voiceover', async (req: Request, res: Response) => {
+  try {
+    const { text, voiceName = 'Charon' } = req.body || {};
+    const cleanText = String(text || 'Welcome back. Today we break down the hidden rules of focus and mental mastery.').slice(0, 750);
+
+    if (ai) {
+      try {
+        const response = await ai.models.generateContent({
+          model: 'gemini-3.8-flash-lite-tts',
+          contents: [
+            {
+              role: 'user',
+              parts: [
+                {
+                  text: cleanText,
+                  speechMetadata: {
+                    style: 'Authoritative, calm, cinematic documentary narrator',
+                  },
+                } as any,
+              ],
+            },
+          ],
+          config: {
+            responseModalities: ['AUDIO'],
+            speechConfig: {
+              voiceConfig: {
+                prebuiltVoiceConfig: { voiceName },
+              },
+            },
+          },
+        });
+
+        const base64Audio =
+          response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+        if (base64Audio) {
+          return res.json({
+            audioBase64: base64Audio,
+            mimeType: 'audio/wav',
+            source: 'gemini-3.8-flash-lite-tts',
+          });
+        }
+      } catch (ttsErr) {
+        console.warn('Gemini TTS fallback triggered:', ttsErr);
+      }
+    }
+
+    const fallbackWav = createFallbackWavBuffer(9);
+    return res.json({
+      audioBase64: fallbackWav.toString('base64'),
+      mimeType: 'audio/wav',
+      source: 'studio-synth-fallback',
+    });
+  } catch (error: any) {
+    console.error('Error generating voiceover:', error);
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+// ----------------------------------------------------
 // Health check
 // ----------------------------------------------------
 app.get('/api/health', (req: Request, res: Response) => {

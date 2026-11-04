@@ -27,7 +27,7 @@ const STEPS = [
   { id: 4, label: '4. Create With AI', icon: FileText, short: 'Create AI' },
   { id: 5, label: '5. Grow to 50K', icon: ImageIcon, short: '50K Growth' },
   { id: 6, label: '6. Monetize Channel', icon: DollarSign, short: 'Monetize' },
-  { id: 7, label: '7. Video SEO Kit', icon: Search, short: 'SEO Kit' },
+  { id: 7, label: '7. Auto-Upload & SEO', icon: Search, short: 'Auto-Upload' },
 ];
 
 export const Navbar: React.FC<NavbarProps> = ({
