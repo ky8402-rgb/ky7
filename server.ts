@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { type Request, type Response } from 'express';
 import { createServer as createViteServer } from 'vite';
 import { GoogleGenAI, Type } from '@google/genai';
 import dotenv from 'dotenv';
@@ -1382,20 +1382,34 @@ app.get('/api/health', (req: Request, res: Response) => {
 // ----------------------------------------------------
 async function startServer() {
   if (process.env.NODE_ENV !== 'production') {
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
+    let viteMiddleware: any = null;
+    const viteReady = createViteServer({
+      server: {
+        middlewareMode: true,
+        hmr: process.env.DISABLE_HMR !== 'true',
+        watch: process.env.DISABLE_HMR === 'true' ? null : {},
+      },
       appType: 'spa',
+    }).then((vite) => {
+      viteMiddleware = vite.middlewares;
+      return vite;
     });
-    app.use(vite.middlewares);
+
+    app.use(async (req, res, next) => {
+      if (!viteMiddleware) {
+        await viteReady;
+      }
+      return viteMiddleware(req, res, next);
+    });
   } else {
     app.use(express.static(path.resolve(__dirname, 'dist')));
-    app.get('*', (req, res) => {
+    app.get('*', (req: Request, res: Response) => {
       res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
     });
   }
 
   app.listen(port, '0.0.0.0', () => {
-    console.log(`ChannelForge server running on http://localhost:${port}`);
+    console.log(`ChannelForge server running on http://0.0.0.0:${port}`);
   });
 }
 
