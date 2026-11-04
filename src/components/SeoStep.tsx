@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SeoData, VideoScript } from '../types';
+import { SeoData, VideoScript, ContentPlan, VideoTopic } from '../types';
 import { formatYouTubeTags } from '../utils/youtube-logic';
 import {
   renderAutomatedFacelessVideo,
@@ -38,26 +38,41 @@ import {
   Volume2,
   Film,
   X,
+  Zap,
+  Clock,
+  Layers,
 } from 'lucide-react';
 
 interface SeoStepProps {
   seo: SeoData;
   videoTitle: string;
   script: VideoScript;
+  contentPlan?: ContentPlan;
   thumbnailDataUrl?: string | null;
   onSelectTitleVariant: (title: string) => void;
+  onSelectIdeaForAutoPilot?: (video: VideoTopic) => Promise<void> | void;
   onRegenerateSeo: () => void;
   onProceedToMonetization: () => void;
   isLoading: boolean;
   channelName: string;
 }
 
+function getNextScheduledIsoLocal(daysAhead: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + daysAhead);
+  d.setHours(18, 0, 0, 0);
+  const tzOffsetMs = d.getTimezoneOffset() * 60000;
+  return new Date(d.getTime() - tzOffsetMs).toISOString().slice(0, 16);
+}
+
 export const SeoStep: React.FC<SeoStepProps> = ({
   seo,
   videoTitle,
   script,
+  contentPlan,
   thumbnailDataUrl,
   onSelectTitleVariant,
+  onSelectIdeaForAutoPilot,
   onRegenerateSeo,
   onProceedToMonetization,
   isLoading,
@@ -69,7 +84,7 @@ export const SeoStep: React.FC<SeoStepProps> = ({
   const [voiceName, setVoiceName] = useState<
     'Charon' | 'Kore' | 'Fenrir' | 'Puck' | 'Zephyr'
   >('Charon');
-  const [secondsPerScene, setSecondsPerScene] = useState<number>(2.5);
+  const [secondsPerScene, setSecondsPerScene] = useState<number>(2);
   const [isRenderingVideo, setIsRenderingVideo] = useState(false);
   const [renderProgress, setRenderProgress] = useState(0);
   const [renderStage, setRenderStage] = useState('');
@@ -77,6 +92,11 @@ export const SeoStep: React.FC<SeoStepProps> = ({
     useState<RenderedVideoOutput | null>(null);
   const [customVideoFile, setCustomVideoFile] = useState<File | null>(null);
   const [renderError, setRenderError] = useState<string | null>(null);
+
+  // Full 1-Click Auto-Pilot state
+  const [isRunningAutoPilot, setIsRunningAutoPilot] = useState(false);
+  const [autoPilotStepText, setAutoPilotStepText] = useState('');
+  const [showOAuthGuide, setShowOAuthGuide] = useState(false);
 
   // YouTube OAuth & Direct Upload state
   const [needsAuth, setNeedsAuth] = useState(true);
@@ -87,7 +107,9 @@ export const SeoStep: React.FC<SeoStepProps> = ({
   const [privacyStatus, setPrivacyStatus] = useState<
     'private' | 'unlisted' | 'public'
   >('private');
-  const [publishAt, setPublishAt] = useState<string>('');
+  const [publishAt, setPublishAt] = useState<string>(() =>
+    getNextScheduledIsoLocal(1)
+  );
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -124,7 +146,7 @@ export const SeoStep: React.FC<SeoStepProps> = ({
     setTimeout(() => setCopiedField(null), 2000);
   };
 
-  const handleRenderVideo = async () => {
+  const handleRenderVideo = async (): Promise<RenderedVideoOutput | null> => {
     setIsRenderingVideo(true);
     setRenderError(null);
     setRenderProgress(2);
@@ -142,16 +164,18 @@ export const SeoStep: React.FC<SeoStepProps> = ({
         },
       });
       setRenderedVideo(output);
+      return output;
     } catch (err: any) {
       setRenderError(
         err?.message || 'Failed to render automated video in browser.'
       );
+      return null;
     } finally {
       setIsRenderingVideo(false);
     }
   };
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleLogin = async (): Promise<string | null> => {
     setIsLoggingIn(true);
     setUploadError(null);
     try {
@@ -163,17 +187,78 @@ export const SeoStep: React.FC<SeoStepProps> = ({
           const ch = await fetchConnectedYouTubeChannel(result.accessToken);
           setConnectedChannel(ch);
         } catch (chErr: any) {
-          setUploadError(chErr?.message || null);
+          console.warn('Channel lookup warning:', chErr);
         }
+        return result.accessToken;
       }
+      return null;
     } catch (err: any) {
       setUploadError(
         err?.message ||
           'Google sign-in failed. Make sure popups are allowed for this page.'
       );
+      return null;
     } finally {
       setIsLoggingIn(false);
     }
+  };
+
+  // 1-Click Full Auto-Pilot Pipeline:
+  // Automatically renders the multi-scene video + AI voiceover, connects Google OAuth if needed,
+  // and opens the final confirmation modal to publish/schedule on YouTube!
+  const handleRunFullAutoPilot = async (daysAheadSchedule = 1) => {
+    setIsRunningAutoPilot(true);
+    setUploadError(null);
+    setRenderError(null);
+
+    try {
+      const scheduledIso = getNextScheduledIsoLocal(daysAheadSchedule);
+      setPublishAt(scheduledIso);
+
+      setAutoPilotStepText(
+        'Step 1/3: Synthesizing Gemini TTS voiceover & rendering 1280x720 HD multi-scene video...'
+      );
+      const videoOut = renderedVideo || (await handleRenderVideo());
+      if (!videoOut) {
+        throw new Error('Automated video rendering did not complete.');
+      }
+
+      setAutoPilotStepText(
+        'Step 2/3: Verifying Google YouTube OAuth connection...'
+      );
+      let token = await getAccessToken();
+      if (!token) {
+        token = await handleGoogleLogin();
+      }
+
+      setAutoPilotStepText(
+        'Step 3/3: Video & SEO package ready! Review confirmation dialog to publish to YouTube.'
+      );
+      if (token) {
+        setShowConfirmModal(true);
+      } else {
+        setUploadError(
+          'Video is 100% rendered and ready! Click "Sign in with Google" to authorize uploading to your YouTube channel.'
+        );
+      }
+    } catch (err: any) {
+      setUploadError(err?.message || 'Auto-pilot pipeline encountered an error.');
+    } finally {
+      setIsRunningAutoPilot(false);
+    }
+  };
+
+  const handleQueueIdeaAndAutoRun = async (
+    idea: VideoTopic,
+    daysAhead: number
+  ) => {
+    onSelectTitleVariant(idea.title);
+    setPublishAt(getNextScheduledIsoLocal(daysAhead));
+    if (onSelectIdeaForAutoPilot) {
+      await onSelectIdeaForAutoPilot(idea);
+    }
+    setRenderedVideo(null);
+    await handleRunFullAutoPilot(daysAhead);
   };
 
   const handleDisconnect = async () => {
@@ -191,7 +276,7 @@ export const SeoStep: React.FC<SeoStepProps> = ({
     setShowConfirmModal(false);
     if (!activeVideoBlob) {
       setUploadError(
-        'Please click "Auto-Render Multi-Scene Video" (or select a video file) before uploading to YouTube.'
+        'Please click "Run 1-Click Full Auto-Pilot" or "Auto-Render Multi-Scene Video" first.'
       );
       return;
     }
@@ -235,32 +320,99 @@ export const SeoStep: React.FC<SeoStepProps> = ({
   };
 
   const formattedTags = formatYouTubeTags(seo.tags);
+  const queueIdeas: VideoTopic[] = (contentPlan?.weeks || [])
+    .flatMap((w) => w.videos)
+    .slice(0, 6);
 
   return (
     <div className="space-y-8 animate-fade-in pb-16">
-      {/* Header */}
-      <div className="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-semibold uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5" />
-            Step 7 • Auto-Render, Direct YouTube Upload &amp; SEO Kit
+      {/* Top 1-Click Full Auto-Pilot Command Center */}
+      <div className="p-6 rounded-2xl bg-gradient-to-br from-zinc-900 via-zinc-950 to-zinc-900 border border-red-500/30 shadow-2xl space-y-5">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div className="space-y-1.5">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/15 border border-red-500/30 text-red-400 text-xs font-bold uppercase tracking-wider">
+              <Zap className="w-3.5 h-3.5" />
+              Step 7 • 1-Click End-to-End YouTube Auto-Pilot
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              7. Full Auto-Pilot Video Producer &amp; Direct YouTube Channel Publisher
+            </h1>
+            <p className="text-zinc-300 text-sm max-w-3xl">
+              Click <strong>Run 1-Click Full Auto-Pilot</strong> below to automatically synthesize the Gemini TTS voiceover, render your 1280x720 HD multi-scene video with kinetic captions, package your SEO tags &amp; chapters, and schedule/upload directly to your YouTube channel.
+            </p>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            7. Automated Video Renderer &amp; Direct YouTube Channel Publisher
-          </h1>
-          <p className="text-zinc-400 text-sm">
-            Automatically synthesize AI voiceovers, render your multi-scene 720p/1080p video, and upload directly to your YouTube channel via the official YouTube Data API v3.
-          </p>
+
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
+            <button
+              onClick={() => setShowOAuthGuide((v) => !v)}
+              className="px-3.5 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 text-xs font-semibold border border-zinc-700 transition-colors cursor-pointer"
+            >
+              {showOAuthGuide ? 'Hide OAuth Status Card' : 'View OAuth Status Card'}
+            </button>
+
+            <button
+              onClick={() => handleRunFullAutoPilot(1)}
+              disabled={isRunningAutoPilot || isRenderingVideo || isUploading}
+              className="px-5 py-3 rounded-xl bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white text-xs sm:text-sm font-extrabold flex items-center gap-2 shadow-xl shadow-red-600/30 transition-all cursor-pointer"
+            >
+              <Zap
+                className={`w-4 h-4 ${
+                  isRunningAutoPilot ? 'animate-spin' : ''
+                }`}
+              />
+              <span>
+                {isRunningAutoPilot
+                  ? 'Running Full Auto-Pilot...'
+                  : 'Run 1-Click Full Auto-Pilot Now'}
+              </span>
+            </button>
+          </div>
         </div>
 
-        <button
-          onClick={onRegenerateSeo}
-          disabled={isLoading}
-          className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold flex items-center justify-center gap-2 border border-zinc-700 transition-colors shrink-0 disabled:opacity-50"
-        >
-          <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
-          <span>Regenerate SEO Kit</span>
-        </button>
+        {/* Auto-Pilot Live Pipeline Bar */}
+        {isRunningAutoPilot && (
+          <div className="p-4 rounded-xl bg-zinc-900/90 border border-red-500/40 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <RefreshCw className="w-4 h-4 text-red-400 animate-spin shrink-0" />
+              <span className="text-xs sm:text-sm font-semibold text-white">
+                {autoPilotStepText}
+              </span>
+            </div>
+            <span className="text-xs font-mono text-red-400 font-bold">
+              {renderProgress > 0 ? `${renderProgress}%` : 'ACTIVE'}
+            </span>
+          </div>
+        )}
+
+        {/* Collapsible Uploaded OAuth Reference Card */}
+        {showOAuthGuide && (
+          <div className="p-4 rounded-xl bg-zinc-950 border border-zinc-800 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+            <div className="md:col-span-5 rounded-lg overflow-hidden border border-zinc-800 bg-black">
+              <img
+                src="/assets/aistudio/IMG_0548_10cc876e.png"
+                alt="Google Cloud OAuth Client Created"
+                className="w-full h-auto object-contain max-h-52"
+              />
+            </div>
+            <div className="md:col-span-7 space-y-2 text-xs text-zinc-300">
+              <div className="inline-flex items-center gap-1.5 text-emerald-400 font-bold uppercase tracking-wider text-[11px]">
+                <CheckCircle2 className="w-4 h-4" />
+                Google Cloud OAuth Provisioned &amp; Active
+              </div>
+              <p className="text-zinc-300 leading-relaxed">
+                Your app is wired to the official client-side Google OAuth 2.0 flow (<code className="text-zinc-200">youtube.upload</code> + <code className="text-zinc-200">youtube.readonly</code>). We never store or expose your Client Secret in browser code.
+              </p>
+              <ul className="space-y-1 text-zinc-400 list-disc list-inside">
+                <li>
+                  Ensure <strong>YouTube Data API v3</strong> is enabled in your Google Cloud Console Library.
+                </li>
+                <li>
+                  Ensure your Google account (<code className="text-zinc-200">ky8402@gmail.com</code>) is listed under <strong>Audience &rarr; Test users</strong> on your OAuth consent screen.
+                </li>
+              </ul>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* SECTION 1 & 2: Automated Video Renderer + Direct YouTube API Uploader */}
@@ -402,7 +554,7 @@ export const SeoStep: React.FC<SeoStepProps> = ({
 
           <div className="pt-3 border-t border-zinc-900 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
             <button
-              onClick={handleRenderVideo}
+              onClick={() => handleRenderVideo()}
               disabled={isRenderingVideo}
               className="flex-1 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-lg shadow-red-600/20 transition-all cursor-pointer"
             >
@@ -473,7 +625,7 @@ export const SeoStep: React.FC<SeoStepProps> = ({
                 {/* Official Google Sign-In Button per workspace-integration skill */}
                 <button
                   type="button"
-                  onClick={handleGoogleLogin}
+                  onClick={() => handleGoogleLogin()}
                   disabled={isLoggingIn}
                   className="gsi-material-button inline-flex items-center gap-3 px-4 py-2.5 rounded-lg bg-white hover:bg-zinc-100 text-zinc-900 font-semibold text-xs shadow transition-all cursor-pointer disabled:opacity-60"
                 >
@@ -570,7 +722,7 @@ export const SeoStep: React.FC<SeoStepProps> = ({
               <div className="space-y-1.5">
                 <label className="text-[11px] font-bold uppercase tracking-wider text-zinc-400 flex items-center gap-1">
                   <Calendar className="w-3.5 h-3.5 text-sky-400" />
-                  Auto-Schedule Release (Optional)
+                  Auto-Schedule Release (publishAt)
                 </label>
                 <input
                   type="datetime-local"
@@ -674,6 +826,67 @@ export const SeoStep: React.FC<SeoStepProps> = ({
         </div>
       </div>
 
+      {/* SECTION 3: Automated 6-Day Queue Scheduler (Safe Quota Auto-Queue) */}
+      {queueIdeas.length > 0 && (
+        <div className="p-6 rounded-2xl bg-zinc-950 border border-zinc-800 shadow-xl space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h2 className="text-base font-bold text-white flex items-center gap-2">
+                <Layers className="w-4 h-4 text-red-400" />
+                3. Automated 6-Video Channel Queue (Safe Daily Quota Scheduler)
+              </h2>
+              <p className="text-xs text-zinc-400">
+                Select any upcoming video from your 30 Viral Ideas to automatically render its HD video, set its scheduled release date, and queue it to YouTube.
+              </p>
+            </div>
+            <span className="px-3 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-[11px] font-mono text-emerald-400 shrink-0">
+              1,600 / 10,000 Quota Units per Upload
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {queueIdeas.map((idea, idx) => {
+              const daysAhead = idx + 1;
+              const isCurrent = videoTitle === idea.title;
+              return (
+                <div
+                  key={idea.id || idx}
+                  className={`p-4 rounded-xl border flex flex-col justify-between gap-3 transition-all ${
+                    isCurrent
+                      ? 'bg-zinc-900 border-red-500/60'
+                      : 'bg-zinc-900/40 border-zinc-800/80 hover:border-zinc-700'
+                  }`}
+                >
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between text-[10px] font-mono">
+                      <span className="px-2 py-0.5 rounded bg-red-500/10 text-red-400 font-bold">
+                        Slot #{daysAhead} • {idea.format}
+                      </span>
+                      <span className="text-zinc-400 flex items-center gap-1">
+                        <Clock className="w-3 h-3 text-sky-400" />
+                        Day +{daysAhead} (18:00)
+                      </span>
+                    </div>
+                    <h3 className="text-xs font-bold text-white leading-snug line-clamp-2">
+                      {idea.title}
+                    </h3>
+                  </div>
+
+                  <button
+                    onClick={() => handleQueueIdeaAndAutoRun(idea, daysAhead)}
+                    disabled={isRunningAutoPilot || isRenderingVideo}
+                    className="w-full px-3 py-2 rounded-lg bg-zinc-800 hover:bg-red-600 disabled:opacity-50 text-white text-[11px] font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                  >
+                    <Zap className="w-3.5 h-3.5" />
+                    <span>Auto-Render &amp; Schedule Day +{daysAhead}</span>
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Mandatory Confirmation Modal before mutating user's YouTube channel */}
       {showConfirmModal && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
@@ -769,12 +982,22 @@ export const SeoStep: React.FC<SeoStepProps> = ({
 
       {/* Title A/B/C Testing Options */}
       <div className="space-y-3">
-        <label className="text-xs font-bold uppercase tracking-wider text-zinc-400 flex items-center gap-2">
-          <span>Clickable Title A/B/C Options</span>
-          <span className="text-[10px] text-zinc-500 font-normal">
-            Click any title to make it active for your YouTube upload
-          </span>
-        </label>
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-bold uppercase tracking-wider text-zinc-400 flex items-center gap-2">
+            <span>Clickable Title A/B/C Options</span>
+            <span className="text-[10px] text-zinc-500 font-normal">
+              Click any title to make it active for your YouTube upload
+            </span>
+          </label>
+          <button
+            onClick={onRegenerateSeo}
+            disabled={isLoading}
+            className="px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-xs font-semibold flex items-center gap-1.5 border border-zinc-800 transition-colors disabled:opacity-50"
+          >
+            <RefreshCw className={`w-3 h-3 ${isLoading ? 'animate-spin' : ''}`} />
+            <span>Regenerate SEO Metadata</span>
+          </button>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {[

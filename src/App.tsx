@@ -1607,6 +1607,7 @@ export default function App() {
             seo={seo}
             videoTitle={activeVideoTitle}
             script={script}
+            contentPlan={contentPlan}
             onSelectTitleVariant={(title) => {
               setActiveVideoTitle(title);
               setScript(prev => ({ ...prev, title }));
