@@ -5,7 +5,8 @@ import {
   ContentPlan, 
   VideoScript, 
   ThumbnailData, 
-  SeoData 
+  SeoData,
+  MonetizationRoadmapData
 } from '../types';
 import { X, Copy, Check, Download, FileText } from 'lucide-react';
 
@@ -18,6 +19,7 @@ interface ExportModalProps {
   script: VideoScript;
   thumbnail: ThumbnailData;
   seo: SeoData;
+  monetization?: MonetizationRoadmapData;
 }
 
 export const ExportModal: React.FC<ExportModalProps> = ({
@@ -29,6 +31,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
   script,
   thumbnail,
   seo,
+  monetization,
 }) => {
   const [copied, setCopied] = useState<boolean>(false);
 
@@ -154,7 +157,28 @@ ${(thumbnail.analyticsPivots || []).map(p => `- **${p.metricSignal} (${p.thresho
 
 ---
 
-## 6. VIDEO SEO & PUBLISHING KIT
+## 6. MONETIZE MY CHANNEL (REALISTIC 60-DAY MULTI-STREAM ROADMAP)
+**Realistic Expectation Note:** ${monetization?.realisticExpectationNote || 'Monetization and 50,000 subscribers are not guaranteed within 60 days; pair YPP watch-time building with Day-1 Affiliate and Digital Product offers.'}
+
+### YouTube Partner Program (YPP) Requirements:
+- **${monetization?.yppTier1Summary.title || 'YPP Tier 1 (500 Subs)'}:** ${monetization?.yppTier1Summary.watchHoursOrShorts || '3,000 watch hours or 3M Shorts views'}
+- **${monetization?.yppTier2Summary.title || 'YPP Tier 2 (1,000 Subs)'}:** ${monetization?.yppTier2Summary.watchHoursOrShorts || '4,000 watch hours or 10M Shorts views'}
+
+### 4 Revenue Streams Breakdown:
+${(monetization?.revenueStreams || []).map(s => `- **${s.streamName}** (${s.dayOneEligible ? 'Day-1 Eligible' : s.unlockThreshold} | ${s.expectedMarginOrCut}): ${s.howToEarn}`).join('\n')}
+
+### Weekly Monetization Action Plan (Weeks 1–8):
+${(monetization?.weeklyActionPlan || []).map(w => `- **${w.week} (${w.days}) — ${w.focusTitle}:** ${w.actionItems.join(' ')} (*${w.milestoneCheck}*)`).join('\n')}
+
+### Recommended Suitable Offers:
+${(monetization?.recommendedOffers || []).map(o => `- **${o.offerName} [${o.offerType} — ${o.priceOrPayout}]:** ${o.targetPainPoint}\n  - *CTA:* ${o.integrationAngle}`).join('\n')}
+
+### Original Content & YouTube Monetization Policy Compliance:
+${(monetization?.policyComplianceRules || []).map(c => `- **${c.ruleTitle} (${c.riskFlag}):** Avoid ${c.whatGetsRejected} -> *Comply:* ${c.howToComply}`).join('\n')}
+
+---
+
+## 7. VIDEO SEO & PUBLISHING KIT
 - **Title Option A:** ${seo.titleA}
 - **Title Option B:** ${seo.titleB}
 - **Title Option C:** ${seo.titleC}
@@ -172,14 +196,6 @@ ${seo.tags.join(', ')}
 
 ### Hashtags:
 ${seo.hashtags.join(' ')}
-
----
-
-## 7. 0 TO 10,000 SUBSCRIBERS MILESTONE SUMMARY
-1. **Phase 1 (Days 1-14):** 3 Long-form benchmark videos + 5 YouTube Shorts feeders.
-2. **Phase 2 (Days 15-45):** 2 Long-form weekly + 2 Shorts. Eliminate 0:00-0:30 friction for 4,000 watch hours.
-3. **Phase 3 (Days 45-75):** Apply for YPP; deploy affiliate links in top 3 lines of description.
-4. **Phase 4 (Days 75-120):** Launch $19-$39 proprietary digital product; pitch sponsors with rate card.
 `;
   };
 

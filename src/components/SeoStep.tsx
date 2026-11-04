@@ -50,10 +50,10 @@ export const SeoStep: React.FC<SeoStepProps> = ({
         <div className="space-y-1">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-semibold uppercase tracking-wider">
             <Sparkles className="w-3.5 h-3.5" />
-            Step 6 of Blueprint
+            Step 7 • Bonus Publishing Kit
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            6. Video SEO & YouTube Publishing Kit
+            7. Video SEO &amp; YouTube Publishing Kit
           </h1>
           <p className="text-zinc-400 text-sm">
             Everything you need to copy-paste into YouTube Studio for maximum search volume and suggested video algorithmic push.
@@ -215,7 +215,7 @@ export const SeoStep: React.FC<SeoStepProps> = ({
           onClick={onProceedToMonetization}
           className="px-6 py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-semibold text-sm flex items-center gap-2 shadow-lg shadow-red-600/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
         >
-          <span>Proceed to Step 7: Monetization & 0 to 10K Subscribers</span>
+          <span>Export Master Channel Blueprint (.md)</span>
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>

@@ -1088,6 +1088,196 @@ const INITIAL_SEO: SeoData = {
   hashtags: ['#Stoicism', '#DarkPsychology', '#SelfImprovement', '#Mindset', '#Wisdom']
 };
 
+const INITIAL_MONETIZATION = {
+  realisticExpectationNote: 'Monetization via the YouTube Partner Program (YPP) and reaching 50,000 subscribers are NOT guaranteed within 60 days — algorithmic velocity depends on CTR, retention, and viewer satisfaction. Therefore, this 60-day roadmap pairs YPP watch-time accumulation with Day-1 off-platform monetization (Affiliate Marketing & Digital Products) so your channel can generate its first $100–$1,500+ even before hitting 1,000 subscribers.',
+  yppTier1Summary: {
+    title: 'YPP Tier 1: Early Access (Fan Funding & YouTube Shopping)',
+    subscribersRequired: 500,
+    uploadsRequired: '3 valid public uploads in the last 90 days',
+    watchHoursOrShorts: '3,000 valid public watch hours (12 mos) OR 3,000,000 valid public Shorts views (90 days)',
+    unlockedFeatures: [
+      'Super Thanks on long-form videos & Shorts',
+      'Channel Memberships (monthly recurring fan tiers)',
+      'YouTube Shopping (connect your own Gumroad/Shopify digital store)'
+    ]
+  },
+  yppTier2Summary: {
+    title: 'YPP Tier 2: Full Ad Revenue Sharing (AdSense)',
+    subscribersRequired: 1000,
+    watchHoursOrShorts: '4,000 valid public watch hours (12 mos) OR 10,000,000 valid public Shorts views (90 days)',
+    complianceRequirements: [
+      '2-Step Verification active on Google Account',
+      'Zero active Community Guidelines strikes',
+      'AdSense account linked & human review passed for Original Content (no Reused/Repetitious violations)'
+    ],
+    unlockedFeatures: [
+      '55% Creator Revenue Share on Long-Form Watch Page Ads (pre-roll, mid-roll on 8+ min videos, post-roll)',
+      '45% Creator Revenue Share from the Shorts Feed Ad Pool',
+      'YouTube Premium subscriber watch-time revenue share'
+    ]
+  },
+  revenueStreams: [
+    {
+      streamName: 'Ad Revenue (YPP)',
+      dayOneEligible: false,
+      unlockThreshold: '1,000 Subs + 4,000 Watch Hours (or 10M Shorts views)',
+      realisticTimeline: 'Typically unlocked Weeks 5–10 depending on long-form retention',
+      expectedMarginOrCut: '55% Creator Share on Long-Form ($7–$16 net RPM in this niche)',
+      howToEarn: 'Make every long-form video 8–12 minutes long so YouTube Studio unlocks manual Mid-Roll ad slots.',
+      executionSteps: [
+        'Target 8+ minute runtimes so you can place 2 mid-roll ad breaks at natural narrative cliffhangers (e.g., 02:45 and 06:15).',
+        'Focus on Tier-1 geographies (US, UK, Canada, Australia) via English narration and high-value philosophical/educational topics.',
+        'Remember: Shorts watch time does NOT count toward the 4,000 long-form watch hours — rely on 8–10 min pillars for YPP qualification.'
+      ]
+    },
+    {
+      streamName: 'Affiliate Marketing',
+      dayOneEligible: true,
+      unlockThreshold: '0 Subscribers (Active from Video #1)',
+      realisticTimeline: 'First commissions possible in Weeks 1–3',
+      expectedMarginOrCut: '$5–$45 per conversion (10%–50% recurring on software/books)',
+      howToEarn: 'Recommend 1–2 hyper-relevant tools, books, or audio platforms naturally inside your script and place tracked links in the top 2 lines of the description + pinned comment.',
+      executionSteps: [
+        'Sign up for Audible Creator Program ($5 per free trial signup, $10 per paid membership) — ideal for book-based psychology & stoicism channels.',
+        'Add Amazon Associates & Shortform/Blinkist affiliate links (20%–25% commission) in the pinned comment of every long-form video.',
+        'Verbally mention the resource at the 60% mark of the video ("If you want to go deeper into Marcus Aurelius’s original journal, grab the free audiobook linked in the pinned comment").'
+      ]
+    },
+    {
+      streamName: 'Digital Products',
+      dayOneEligible: true,
+      unlockThreshold: '0 Subscribers (Active from Week 2)',
+      realisticTimeline: 'First sales typically start at 1,000–5,000 total channel views',
+      expectedMarginOrCut: '90%–95% Net Profit Margin ($19–$39 price point on Gumroad/LemonSqueezy)',
+      howToEarn: 'Package your channel’s core framework into a downloadable PDF workbook, Notion system, or audio guide that solves the viewer’s immediate problem.',
+      executionSteps: [
+        'Build a 1-product storefront on Gumroad or LemonSqueezy ($0/month subscription fee, only takes a small cut per sale).',
+        'Offer a free 1-page "7-Day Stoic Audit Sheet" lead magnet to collect emails, then upsell the complete $27 Notion Operating System on the thank-you page.',
+        'Display an on-screen QR code + clean short link for 6 seconds during the mid-video takeaway.'
+      ]
+    },
+    {
+      streamName: 'Sponsorships',
+      dayOneEligible: false,
+      unlockThreshold: 'Consistent 5,000–10,000+ views per long-form video',
+      realisticTimeline: 'Weeks 6–12 once view floor stabilizes',
+      expectedMarginOrCut: '$18–$30 CPM ($150–$600+ per 60-second mid-roll integration)',
+      howToEarn: 'Sell a 45–60 second baked-in mid-roll slot between 02:00 and 04:00 to brands targeting self-improvement, productivity, finance, or privacy.',
+      executionSteps: [
+        'Add a dedicated business inquiry email in your Channel About tab on Day 1.',
+        'Once your last 5 long-form videos average 5,000+ views each, list your channel on Passionfroot and reach out to 10 sponsors already advertising on competitor channels.',
+        'Write the sponsor integration in the exact same storytelling voiceover style as the rest of your video so viewers do not skip.'
+      ]
+    }
+  ],
+  weeklyActionPlan: [
+    {
+      week: 'Weeks 1–2',
+      days: 'Days 1–14',
+      focusTitle: 'Foundation, Policy-Safe Production & Affiliate Setup',
+      primaryStream: 'Affiliate Marketing + Watch-Hour Seeding',
+      actionItems: [
+        'Publish 4–6 original 8–10 minute long-form videos with 100% custom scripts and transformative editing.',
+        'Register for Audible Affiliate, Amazon Associates, and 1 recurring SaaS affiliate program; place links in every video description and pinned comment.',
+        'Save your raw script drafts and CapCut/DaVinci timelines in a folder as proof of original creation for future YPP review.'
+      ],
+      milestoneCheck: 'Target: 500–1,500 views, 25–150 watch hours, first 10–30 affiliate link clicks.'
+    },
+    {
+      week: 'Weeks 3–4',
+      days: 'Days 15–30',
+      focusTitle: 'Launch $27 Digital Product & Lead Magnet Funnel',
+      primaryStream: 'Digital Products + Affiliate Commissions',
+      actionItems: [
+        'Create a high-utility $27 digital product on Gumroad (e.g., 30-Day Stoic Resilience Notion Tracker & Workbook).',
+        'Add a 10-second mid-video callout with an on-screen graphic showing the digital workbook inside every new long-form upload.',
+        'Use Shorts "Related Video" bridge links to drive vertical traffic into your highest-retention 10-minute video to accelerate watch hours.'
+      ],
+      milestoneCheck: 'Target: 100–400 subscribers, 400–1,200 cumulative watch hours, first 1–5 digital product/affiliate sales.'
+    },
+    {
+      week: 'Weeks 5–6',
+      days: 'Days 31–45',
+      focusTitle: 'YPP Tier 1 Qualification & Conversion Optimization',
+      primaryStream: 'Digital Products + YPP Tier 1 (500 Subs / 3,000 Hours)',
+      actionItems: [
+        'Audit your top 3 traffic-driving videos: update their pinned comments with your highest-converting affiliate or Gumroad offer.',
+        'Cross 500 subscribers + 3,000 watch hours to apply for YPP Tier 1 (unlocking YouTube Shopping product shelf & Super Thanks).',
+        'If watch hours are below 1,500 at Day 40, shift to 12–15 minute deep-dive essays to double watch minutes per view.'
+      ],
+      milestoneCheck: 'Target: 500–1,200 subscribers, 1,500–3,000 watch hours, $100–$450/mo off-platform revenue.'
+    },
+    {
+      week: 'Weeks 7–8',
+      days: 'Days 46–60',
+      focusTitle: 'YPP Tier 2 AdSense Application & Sponsor Outreach',
+      primaryStream: 'All 4 Streams (AdSense + Affiliates + Products + Sponsors)',
+      actionItems: [
+        'Once 1,000 subscribers + 4,000 valid long-form watch hours are reached, submit YPP Tier 2 application and enable mid-roll ads on all 8+ min videos.',
+        'Build a 1-page Media Kit showing audience demographics (age 24–44, high US/UK share) and pitch 10 brands (BetterHelp, NordVPN, Shortform, Notion).',
+        'If still building toward 4,000 hours at Day 60, release a $39 bundle upgrade to your email list while your backlog compounds toward YPP.'
+      ],
+      milestoneCheck: 'Target: YPP Application submitted (or 60%+ progress) + diversified $300–$2,000+/mo multi-stream run rate.'
+    }
+  ],
+  recommendedOffers: [
+    {
+      offerName: 'Audible Free Trial Creator Bounty + Classic Philosophy Books',
+      offerType: 'Affiliate Offer',
+      priceOrPayout: '$5 per free trial + $10 per paid membership',
+      targetPainPoint: 'Viewers want to listen to Meditations, The 48 Laws of Power, or Letters from a Stoic during their commute.',
+      integrationAngle: '"Get the complete unabridged audio edition of Marcus Aurelius’s Meditations for $0 with a 30-day Audible trial using the first link in the pinned comment."'
+    },
+    {
+      offerName: 'Shortform / Blinkist Book Summary Subscription',
+      offerType: 'Affiliate Offer',
+      priceOrPayout: '20%–25% recurring commission (~$35–$50 per annual signup)',
+      targetPainPoint: 'Busy professionals want actionable 15-minute breakdowns of 1,000+ psychology and strategy books.',
+      integrationAngle: '"We used Shortform’s 1-page synthesis of Carl Jung’s Shadow Work to research Scene 3 — grab 5 days of unlimited access via the link below."'
+    },
+    {
+      offerName: 'The 30-Day Stoic Operating System (Notion Template + 40-Page PDF Protocol)',
+      offerType: 'Digital Product (Own)',
+      priceOrPayout: '$27 one-time (95% profit margin = ~$25.65 net per sale on Gumroad)',
+      targetPainPoint: 'Viewers watch philosophy/psychology videos passively but lack a daily system to practice emotional control.',
+      integrationAngle: '"Stop just watching videos about emotional mastery — download our interactive 30-Day Evening Audit & Cognitive Reframing System at the link in the description."'
+    },
+    {
+      offerName: 'Productivity, Mental Wellness, Cybersecurity & Fintech Sponsors (Notion, Aura, BetterHelp, Surfshark)',
+      offerType: 'Sponsor Category',
+      priceOrPayout: '$20–$30 CPM ($200–$600 per 10,000–20,000 views)',
+      targetPainPoint: 'High-agency self-improvement viewers actively invest in privacy, journaling, and mental clarity tools.',
+      integrationAngle: '60-second mid-roll story transition at 02:30 connecting mental digital clutter to the sponsor’s tool.'
+    }
+  ],
+  policyComplianceRules: [
+    {
+      ruleTitle: '1. Original Script Synthesis (Anti-"Repetitious Content" Rule)',
+      riskFlag: 'High YPP Rejection Risk if Violated',
+      whatGetsRejected: 'Reading scraped Wikipedia articles, Reddit threads, or public-domain book chapters verbatim without original commentary or structural transformation.',
+      howToComply: 'Write original 5-part analytical scripts that synthesize multiple sources, add modern real-world psychological case studies, and present a unique thesis in your channel’s voice.'
+    },
+    {
+      ruleTitle: '2. Transformative Visual Storytelling (Anti-"Reused Content" Rule)',
+      riskFlag: 'Number #1 Cause of Faceless Channel Demonetization',
+      whatGetsRejected: 'Looping a single static image, rain background, or unedited stock footage clip for 10 minutes with automated captions.',
+      howToComply: 'Change visual scenes every 4–7 seconds, layer custom on-screen kinetic text callouts, add keyframe camera motion, and synchronize visual metaphors directly to each spoken sentence.'
+    },
+    {
+      ruleTitle: '3. Expressive Narration & Custom Audio Mixing (Anti-"Mass-Produced Automation" Flag)',
+      riskFlag: 'Medium-High Policy Scrutiny',
+      whatGetsRejected: 'Flat, robotic, unpaced text-to-speech with mispronounced words, zero pauses, or identical template structures across 50+ uploads.',
+      howToComply: 'Use high-inflection neural voiceovers (or your own voice), manually edit breathing pauses (0.2s–0.4s), and mix multi-track sound design (sub-bass risers, ambient score at -22dB).'
+    },
+    {
+      ruleTitle: '4. YPP Human Review & Appeal Readiness Protocol',
+      riskFlag: 'Essential Safeguard for Faceless Creators',
+      whatGetsRejected: 'Deleting videos during YPP review (which wipes watch hours) or failing to show how your videos are made if flagged for Reused Content.',
+      howToComply: 'Never delete public videos before applying for YPP. Keep screen recordings of your scriptwriting documents and CapCut/DaVinci multi-track timelines ready to prove 100% original creation.'
+    }
+  ]
+};
+
 export default function App() {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [niches, setNiches] = useState<NicheItem[]>(INITIAL_NICHES);
@@ -1097,6 +1287,7 @@ export default function App() {
   const [script, setScript] = useState<VideoScript>(INITIAL_SCRIPT);
   const [thumbnail, setThumbnail] = useState<ThumbnailData>(INITIAL_THUMBNAIL);
   const [seo, setSeo] = useState<SeoData>(INITIAL_SEO);
+  const [monetization, setMonetization] = useState(INITIAL_MONETIZATION);
   const [activeVideoTitle, setActiveVideoTitle] = useState<string>(INITIAL_SCRIPT.title);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -1289,6 +1480,31 @@ export default function App() {
     }
   };
 
+  const handleRegenerateMonetization = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch('/api/youtube/generate-monetization-roadmap', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nicheName: activeNiche.name,
+          channelName: activeChannelName,
+        }),
+      });
+      const data = await res.json();
+      if (data.monetization) {
+        setMonetization({
+          ...INITIAL_MONETIZATION,
+          ...data.monetization,
+        });
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSelectNiche = (niche: NicheItem) => {
     setSelectedNicheId(niche.id);
     confetti({
@@ -1374,6 +1590,19 @@ export default function App() {
         )}
 
         {currentStep === 6 && (
+          <MonetizationStep
+            channelName={activeChannelName}
+            nicheName={activeNiche?.name}
+            estimatedCpm={activeNiche?.estimatedCPM || 14.50}
+            monetization={monetization}
+            onRegenerateMonetization={handleRegenerateMonetization}
+            onProceedToSeo={() => setCurrentStep(7)}
+            onExportPlan={() => setIsExportModalOpen(true)}
+            isLoading={isLoading}
+          />
+        )}
+
+        {currentStep === 7 && (
           <SeoStep
             seo={seo}
             videoTitle={activeVideoTitle}
@@ -1382,18 +1611,9 @@ export default function App() {
               setScript(prev => ({ ...prev, title }));
             }}
             onRegenerateSeo={handleRegenerateSeo}
-            onProceedToMonetization={() => setCurrentStep(7)}
+            onProceedToMonetization={() => setIsExportModalOpen(true)}
             isLoading={isLoading}
             channelName={activeChannelName}
-          />
-        )}
-
-        {currentStep === 7 && (
-          <MonetizationStep
-            channelName={activeChannelName}
-            nicheName={activeNiche?.name}
-            estimatedCpm={activeNiche?.estimatedCPM || 14.50}
-            onExportPlan={() => setIsExportModalOpen(true)}
           />
         )}
       </main>
@@ -1414,6 +1634,7 @@ export default function App() {
         script={script}
         thumbnail={thumbnail}
         seo={seo}
+        monetization={monetization}
       />
     </div>
   );

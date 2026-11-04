@@ -184,3 +184,59 @@ export interface SeoData {
   hashtags: string[];
 }
 
+export interface MonetizationStreamGuide {
+  streamName: 'Ad Revenue (YPP)' | 'Affiliate Marketing' | 'Sponsorships' | 'Digital Products' | string;
+  dayOneEligible: boolean;
+  unlockThreshold: string;
+  realisticTimeline: string;
+  expectedMarginOrCut: string;
+  howToEarn: string;
+  executionSteps: string[];
+}
+
+export interface WeeklyMonetizationAction {
+  week: string;
+  days: string;
+  focusTitle: string;
+  primaryStream: string;
+  actionItems: string[];
+  milestoneCheck: string;
+}
+
+export interface RecommendedOfferItem {
+  offerName: string;
+  offerType: 'Affiliate Offer' | 'Digital Product (Own)' | 'Sponsor Category' | string;
+  priceOrPayout: string;
+  targetPainPoint: string;
+  integrationAngle: string;
+}
+
+export interface PolicyComplianceRule {
+  ruleTitle: string;
+  riskFlag: string;
+  whatGetsRejected: string;
+  howToComply: string;
+}
+
+export interface MonetizationRoadmapData {
+  realisticExpectationNote: string;
+  yppTier1Summary: {
+    title: string;
+    subscribersRequired: number;
+    uploadsRequired: string;
+    watchHoursOrShorts: string;
+    unlockedFeatures: string[];
+  };
+  yppTier2Summary: {
+    title: string;
+    subscribersRequired: number;
+    watchHoursOrShorts: string;
+    complianceRequirements: string[];
+    unlockedFeatures: string[];
+  };
+  revenueStreams: MonetizationStreamGuide[];
+  weeklyActionPlan: WeeklyMonetizationAction[];
+  recommendedOffers: RecommendedOfferItem[];
+  policyComplianceRules: PolicyComplianceRule[];
+}
+

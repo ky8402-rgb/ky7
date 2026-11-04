@@ -862,7 +862,7 @@ export const ThumbnailStep: React.FC<ThumbnailStepProps> = ({
           onClick={onProceedToSeo}
           className="px-6 py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-semibold text-sm flex items-center gap-2 shadow-lg shadow-red-600/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
         >
-          <span>Proceed to Step 6: SEO &amp; Publishing Kit</span>
+          <span>Proceed to Step 6: Monetize My Channel</span>
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>

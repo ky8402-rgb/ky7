@@ -16,18 +16,22 @@ export interface RevenueCalculationParams {
   affiliateConversionPercent?: number; // e.g. 3%
   averageCommissionUsd?: number; // e.g. $25
   sponsorshipPer10kViews?: number; // e.g. $150
+  digitalProductConversionPercent?: number; // e.g. 0.08% of viewers buy a $29 digital product
+  digitalProductPriceUsd?: number; // e.g. $29
+  yppApproved?: boolean; // defaults to true; if false, adSenseRevenue is $0 (realistic pre-YPP scenario)
 }
 
 export interface RevenueBreakdown {
   adSenseRevenue: number;
   affiliateRevenue: number;
   sponsorshipRevenue: number;
+  digitalProductRevenue: number;
   totalMonthlyRevenue: number;
   annualProjectedRevenue: number;
 }
 
 /**
- * Calculates estimated revenue breakdown for a YouTube channel
+ * Calculates estimated revenue breakdown for a YouTube channel across all 4 streams
  */
 export function calculateChannelRevenue(params: RevenueCalculationParams): RevenueBreakdown {
   const {
@@ -37,29 +41,41 @@ export function calculateChannelRevenue(params: RevenueCalculationParams): Reven
     affiliateConversionPercent = 2.5,
     averageCommissionUsd = 20,
     sponsorshipPer10kViews = 100,
+    digitalProductConversionPercent = 0,
+    digitalProductPriceUsd = 29,
+    yppApproved = true,
   } = params;
 
-  // YouTube typically pays ~55% of gross CPM (AdSense share)
+  // YouTube typically pays ~55% of gross CPM (AdSense share) once YPP Tier 2 is approved
   const creatorCpm = Math.max(0, cpm * 0.55);
-  const adSenseRevenue = Math.round((monthlyViews / 1000) * creatorCpm * 100) / 100;
+  const adSenseRevenue = yppApproved
+    ? Math.round((monthlyViews / 1000) * creatorCpm * 100) / 100
+    : 0;
 
-  // Affiliate: views -> link clicks -> purchases
+  // Affiliate: views -> link clicks -> purchases (Active from Day 1, even without YPP)
   const linkClicks = monthlyViews * (affiliateClickRatePercent / 100);
   const conversions = linkClicks * (affiliateConversionPercent / 100);
   const affiliateRevenue = Math.round(conversions * averageCommissionUsd * 100) / 100;
 
-  // Sponsorship rate for channels above 50k monthly views
+  // Sponsorship rate for channels above 30k monthly views
   const sponsorshipRevenue = monthlyViews >= 30000 
     ? Math.round((monthlyViews / 10000) * sponsorshipPer10kViews * 100) / 100
     : 0;
 
-  const totalMonthlyRevenue = Math.round((adSenseRevenue + affiliateRevenue + sponsorshipRevenue) * 100) / 100;
+  // Digital Products: direct viewer conversion (Active from Day 1, ~95% net margin after processor fee)
+  const productSales = monthlyViews * (digitalProductConversionPercent / 100);
+  const digitalProductRevenue = Math.round(productSales * digitalProductPriceUsd * 0.95 * 100) / 100;
+
+  const totalMonthlyRevenue = Math.round(
+    (adSenseRevenue + affiliateRevenue + sponsorshipRevenue + digitalProductRevenue) * 100
+  ) / 100;
   const annualProjectedRevenue = Math.round(totalMonthlyRevenue * 12 * 100) / 100;
 
   return {
     adSenseRevenue,
     affiliateRevenue,
     sponsorshipRevenue,
+    digitalProductRevenue,
     totalMonthlyRevenue,
     annualProjectedRevenue,
   };

@@ -143,3 +143,27 @@ test('diagnoseChannelAnalytics detects CTR and retention bottlenecks and scales 
   assert.equal(scaling.overallHealth, 'Scaling to 50K');
   assert.ok(scaling.projected60DaySubs >= 45000);
 });
+
+test('calculateChannelRevenue supports realistic pre-YPP mode (0 AdSense) and digital products', () => {
+  const preYpp = calculateChannelRevenue({
+    monthlyViews: 15000,
+    cpm: 14,
+    affiliateClickRatePercent: 1.5,
+    affiliateConversionPercent: 3.0,
+    averageCommissionUsd: 20,
+    digitalProductConversionPercent: 0.1,
+    digitalProductPriceUsd: 29,
+    yppApproved: false,
+  });
+
+  // Pre-YPP should have $0 AdSense and $0 Sponsorship (<30k views), but positive Affiliate & Digital Product income
+  assert.equal(preYpp.adSenseRevenue, 0);
+  assert.equal(preYpp.sponsorshipRevenue, 0);
+  assert.ok(preYpp.affiliateRevenue > 0);
+  assert.ok(preYpp.digitalProductRevenue > 0);
+  assert.equal(
+    preYpp.totalMonthlyRevenue,
+    Math.round((preYpp.affiliateRevenue + preYpp.digitalProductRevenue) * 100) / 100
+  );
+});
+
