@@ -627,7 +627,7 @@ export const ScriptStep: React.FC<ScriptStepProps> = ({
           onClick={onProceedToThumbnail}
           className="px-6 py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-semibold text-sm flex items-center gap-2 shadow-lg shadow-red-600/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
         >
-          <span>Proceed to Step 5: High-CTR Thumbnail Studio</span>
+          <span>Proceed to Step 5: Grow to 50,000 Subscribers &amp; CTR Lab</span>
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>

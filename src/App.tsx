@@ -919,10 +919,149 @@ const INITIAL_THUMBNAIL: ThumbnailData = {
   secondaryElement: 'Chaotic red motion blur spikes in the background representing angry mob / verbal chaos.',
   midjourneyPrompt: '/imagine prompt: hyper-realistic close-up of a stoic Roman marble statue of Marcus Aurelius, golden glowing cracks running through the marble, dark textured obsidian background, dramatic cinematic side-lighting with bright warm gold rim light, extreme 8k texture, rule of thirds composition, high contrast, clean negative space on left side for text --ar 16:9 --style raw --v 6.0',
   ctrPsychologyTips: [
-    'Only 2 words on the thumbnail ("NEVER REACT") to maximize readability on mobile screens.',
-    'High contrast yellow against deep black creates instant focal gaze trigger.',
-    'Face element (even a statue) triggers human facial recognition circuitry in the amygdala.',
-    'Negative space on the left ensures thumbnail text never overlaps with YouTube duration timestamp badge in bottom right.'
+    'Maximum 2-3 words on the thumbnail ("NEVER REACT") in bold sans-serif so mobile viewers decode it in under 0.3 seconds.',
+    'High-contrast #FACC15 yellow text against #090D16 obsidian dark background creates an immediate visual stop-trigger in YouTube dark mode.',
+    'Complementary Title + Thumbnail rule: never repeat the exact title text on the thumbnail — let the thumbnail create the emotional question and the title provide the specific context.',
+    'Keep the bottom-right 15% of the 16:9 canvas completely free of text so YouTube duration timestamps (e.g., 09:40) never block the hook.'
+  ],
+  dailyPostingSchedule: [
+    {
+      day: 'Monday',
+      format: 'Long-Form Pillar #1 (8–10 mins)',
+      whatToPost: 'Publish flagship Stoic Philosophy & Dark Psychology deep-dive essay at 2:00 PM EST + pin a polarizing debate question in the comments within 60 seconds.',
+      optimizationFocus: 'Test 2 thumbnail variants in the first 3 hours; aim for >= 7.0% CTR and >= 70% retention at 0:30.'
+    },
+    {
+      day: 'Tuesday',
+      format: 'YouTube Short #1 (45–58 secs)',
+      whatToPost: 'Extract the most shocking 45-second psychological paradox from Monday’s pillar video with a seamless loop ending.',
+      optimizationFocus: 'Attach Monday’s Long-Form video via the native "Related Video" bridge link to funnel Shorts viewers into 9-minute watch time.'
+    },
+    {
+      day: 'Wednesday',
+      format: 'YouTube Short #2 + Community Poll',
+      whatToPost: 'Post a rapid-fire "3 Signs of..." Short at 12:00 PM EST + publish a 4-option Community Poll testing Friday’s video title.',
+      optimizationFocus: 'Use the winning Community Poll option (>40% vote share) as the exact Long-Form title hook.'
+    },
+    {
+      day: 'Thursday',
+      format: 'Long-Form Pillar #2 (8–12 mins)',
+      whatToPost: 'Publish high-demand search + browse psychological case study video targeting a high-curiosity emotional habit.',
+      optimizationFocus: 'Place an open-loop mid-video payoff at the 55% mark and an end-screen handoff to Monday’s video.'
+    },
+    {
+      day: 'Friday',
+      format: 'YouTube Short #3 (50–59 secs)',
+      whatToPost: 'Post a high-tension story Short with 0.2s zero-dead-air cuts and yellow/white active word captions.',
+      optimizationFocus: 'Target >= 78% "Viewed vs. Swiped Away" rate and >= 105% average percentage viewed.'
+    },
+    {
+      day: 'Saturday',
+      format: 'Long-Form Pillar #3 OR Viral Synthesis Short #4',
+      whatToPost: 'Publish a weekend binge-worthy breakdown when competitor upload volume drops across the niche.',
+      optimizationFocus: 'Optimize end-screen click-through rate (>= 6%) to chain 2+ videos per viewer session.'
+    },
+    {
+      day: 'Sunday',
+      format: 'Analytics Audit, Batch Script & Thumbnail Lab',
+      whatToPost: 'Publish 1 Community curiosity post + review YouTube Studio CTR/AVD cohorts and batch-produce next week’s 3 Long-Form + 4 Shorts.',
+      optimizationFocus: 'Swap thumbnails on any video from the past 7 days sitting below 5.5% CTR.'
+    }
+  ],
+  retentionPlaybook: [
+    {
+      window: '0:00 – 0:05 (The 5-Second Hook Lock)',
+      tactic: 'Visual Proof + Stakes Before Context',
+      execution: 'Open immediately on the central conflict or paradox shown in the thumbnail. Zero channel intro bumper, zero "Hey guys, welcome back."',
+      retentionLift: '+18% to +24% fewer early drop-offs at the 0:30 mark'
+    },
+    {
+      window: '0:05 – 0:45 (The Open-Loop Contract)',
+      tactic: 'Plant the Final Payoff Early',
+      execution: 'Tease the most powerful rule or revelation (#4 or #7) within the first 35 seconds so viewers stay until the final third of the video.',
+      retentionLift: '+14% lift in mid-roll watch time'
+    },
+    {
+      window: 'Every 20–30 Seconds (Pattern Interrupt Cadence)',
+      tactic: 'Multi-Sensory Reset',
+      execution: 'Alternate camera zoom keyframes, b-roll angle switches, on-screen kinetic text callouts, and subtle low-frequency riser SFX every 25 seconds.',
+      retentionLift: 'Eliminates mid-video flatline decay between 02:00 and 06:00'
+    },
+    {
+      window: 'Final 20 Seconds (Binge-Session Handoff)',
+      tactic: 'Abrupt Bridge Without Sign-Off Clichés',
+      execution: 'Never say "In conclusion" or "Thanks for watching" (which triggers instant exit). Transition directly into the next problem and point to the on-screen video card.',
+      retentionLift: '2.1x higher session watch time & faster Browse algorithm promotion'
+    }
+  ],
+  shortsAndLongFormStrategy: 'Use a synchronized "Discovery Feeder -> Depth Pillar" flywheel: publish 4–5 vertical Shorts (45–58s) per week engineered purely for top-of-funnel reach in the Shorts Shelf, and 2–3 Long-Form videos (8–12 mins) per week engineered for Suggested/Browse watch hours and high RPM. Every Short must dramatize ONE razor-sharp micro-hook and use YouTube Studio’s native "Related Video" clickable link in the lower third to funnel viewers directly into your matching 9-minute Long-Form video.',
+  weeklyTargets: [
+    {
+      weekRange: 'Weeks 1–2',
+      daysRange: 'Days 1–14',
+      subscriberTarget: '0 → 500 Subs',
+      weeklyViewsTarget: '10,000 – 25,000 Views',
+      ctrTarget: '6.0% – 7.0% CTR',
+      retentionTarget: '42%+ AVD (65%+ at 0:30)',
+      cadenceSummary: '6 Long-Form + 10 Shorts total',
+      primaryFocus: 'Algorithm Seed & Baseline Packaging: train YouTube on your exact audience avatar and identify your #1 highest-CTR topic cluster.'
+    },
+    {
+      weekRange: 'Weeks 3–4',
+      daysRange: 'Days 15–30',
+      subscriberTarget: '500 → 3,500 Subs',
+      weeklyViewsTarget: '60,000 – 140,000 Views',
+      ctrTarget: '7.5% – 8.5% CTR',
+      retentionTarget: '46%+ AVD (70%+ at 0:30)',
+      cadenceSummary: '6 Long-Form + 12 Shorts total',
+      primaryFocus: 'Double-Down on Outlier Format: replicate the visual motif and hook cadence of your top 2 videos from Weeks 1–2; unlock full YPP monetization.'
+    },
+    {
+      weekRange: 'Weeks 5–6',
+      daysRange: 'Days 31–45',
+      subscriberTarget: '3,500 → 18,000 Subs',
+      weeklyViewsTarget: '250,000 – 550,000 Views',
+      ctrTarget: '8.5% – 9.8% CTR',
+      retentionTarget: '50%+ AVD (74%+ at 0:30)',
+      cadenceSummary: '6 Long-Form + 14 Shorts total',
+      primaryFocus: 'Browse & Suggested Expansion: build 3-part episodic video chains linked via end screens so every new viewer watches 2.4+ videos per session.'
+    },
+    {
+      weekRange: 'Weeks 7–8',
+      daysRange: 'Days 46–60',
+      subscriberTarget: '18,000 → 50,000+ Subs',
+      weeklyViewsTarget: '800,000 – 1.8M+ Views',
+      ctrTarget: '9.5% – 11.5% CTR',
+      retentionTarget: '52%+ AVD (76%+ at 0:30)',
+      cadenceSummary: '6 Long-Form + 14 Shorts total',
+      primaryFocus: 'Viral Flywheel & Authority Lock: scale sequel videos to your top-performing outlier hits and convert high-velocity Shorts traffic via Related Video bridges.'
+    }
+  ],
+  analyticsPivots: [
+    {
+      metricSignal: 'High Impressions, Low CTR (< 5.0%)',
+      threshold: 'CTR below 5.0% after 5,000 impressions',
+      rootCause: 'Thumbnail is visually cluttered or title lacks an emotional curiosity gap.',
+      strategyAdjustment: 'Do NOT delete the video. Within 24 hours, upload a new thumbnail with 2 bold yellow/white words, 1 enlarged focal statue/face, and rewrite the first 45 characters of the title.'
+    },
+    {
+      metricSignal: 'Steep First 30-Second Drop (< 60% still watching at 0:30)',
+      threshold: 'More than 40% of viewers leave in the first 30 seconds',
+      rootCause: 'Clickbait mismatch or slow throat-clearing intro that delays the promised topic.',
+      strategyAdjustment: 'Start the very next script with immediate visual validation of the thumbnail in seconds 0–5 and cut all introductory pleasantries.'
+    },
+    {
+      metricSignal: 'Mid-Video Retention Cliff (Gradual bleed between 02:00–05:00)',
+      threshold: 'Average View Duration falls below 40% on 8–10 min videos',
+      rootCause: 'Monotone narration pacing or static visuals staying on screen longer than 8 seconds.',
+      strategyAdjustment: 'Increase TTS speed to 1.05x, cut every pause >0.3s, and force a visual B-roll change + on-screen kinetic text callout every 20–25 seconds.'
+    },
+    {
+      metricSignal: 'High Views, Low Subscriber Conversion (< 0.8% view-to-sub ratio)',
+      threshold: 'Fewer than 80 new subscribers per 10,000 views',
+      rootCause: 'Viewers consume the single video as a one-off answer without seeing a reason to join a recurring series.',
+      strategyAdjustment: 'Add a 4-second value-driven subscribe hook right after delivering the #1 insight (around 65% mark) and pitch a specific upcoming sequel video at the end.'
+    }
   ]
 };
 
@@ -1115,7 +1254,10 @@ export default function App() {
       });
       const data = await res.json();
       if (data.thumbnail) {
-        setThumbnail(data.thumbnail);
+        setThumbnail({
+          ...INITIAL_THUMBNAIL,
+          ...data.thumbnail,
+        });
       }
     } catch (e) {
       console.error(e);
@@ -1219,6 +1361,7 @@ export default function App() {
             thumbnail={thumbnail}
             videoTitle={activeVideoTitle}
             channelName={activeChannelName}
+            nicheName={activeNiche?.name}
             onUpdateThumbnail={(updated) => setThumbnail(prev => ({ ...prev, ...updated }))}
             onUpdateTitle={(title) => {
               setActiveVideoTitle(title);

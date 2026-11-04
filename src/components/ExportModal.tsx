@@ -128,13 +128,29 @@ ${(script.recommendedAiTools || []).map(t => `- **${t.name}** [${t.category} —
 
 ---
 
-## 5. HIGH-CTR THUMBNAIL BLUEPRINT
-- **Concept Name:** ${thumbnail.conceptName}
-- **Bold Headline:** "${thumbnail.boldHeadline}"
-- **Headline Color:** ${thumbnail.headlineColor}
+## 5. GROW TO 50,000 SUBSCRIBERS (60-DAY GROWTH COACH & CTR LAB)
+- **Thumbnail Concept Name:** ${thumbnail.conceptName}
+- **Bold Headline:** "${thumbnail.boldHeadline}" (${thumbnail.headlineColor})
 - **Focal Element:** ${thumbnail.focalElement}
 - **Midjourney / Flux Generation Prompt:**
 > ${thumbnail.midjourneyPrompt}
+
+### Daily Posting Cadence (Repeatable 7-Day Rhythm Across 60 Days):
+${(thumbnail.dailyPostingSchedule || []).map(d => `- **${d.day} (${d.format}):** ${d.whatToPost}\n  - *Optimization Focus:* ${d.optimizationFocus}`).join('\n')}
+
+### Audience Retention Playbook:
+${(thumbnail.retentionPlaybook || []).map(r => `- **${r.window} — ${r.tactic}:** ${r.execution} (*${r.retentionLift}*)`).join('\n')}
+
+### Strategic Shorts & Long-Form Funnel:
+${thumbnail.shortsAndLongFormStrategy || 'Use Shorts as top-of-funnel discovery feeders bridged via "Related Video" links into 8-12 minute Long-Form pillars.'}
+
+### Weekly Performance Targets (0 to 50,000 Subscribers in 60 Days):
+${(thumbnail.weeklyTargets || []).map(w => `- **${w.weekRange} (${w.daysRange}):** ${w.subscriberTarget} | ${w.weeklyViewsTarget} | ${w.ctrTarget} | ${w.retentionTarget}
+  - *Focus:* ${w.primaryFocus}`).join('\n')}
+
+### Analytics Strategy Adjustment Rules:
+${(thumbnail.analyticsPivots || []).map(p => `- **${p.metricSignal} (${p.threshold}):** ${p.rootCause}
+  - *Adjustment:* ${p.strategyAdjustment}`).join('\n')}
 
 ---
 

@@ -10,6 +10,7 @@ import {
   calculateChecklistProgress,
   summarizeVideoIdeas,
   calculateScriptMetrics,
+  diagnoseChannelAnalytics,
 } from './youtube-logic.js';
 
 test('calculateChannelRevenue calculates AdSense, Affiliate, and Sponsor revenue accurately', () => {
@@ -122,5 +123,23 @@ test('calculateScriptMetrics computes total words, formatted duration, and speak
   assert.equal(metrics.avgSceneSeconds, 60);
 });
 
+test('diagnoseChannelAnalytics detects CTR and retention bottlenecks and scales 60-day subscriber projections', () => {
+  const bottleneck = diagnoseChannelAnalytics({
+    ctrPercent: 3.8,
+    retention30sPercent: 52,
+    avgViewDurationPercent: 36,
+    shortsBridgeClickPercent: 1.1,
+  });
+  assert.equal(bottleneck.overallHealth, 'Bottleneck Detected');
+  assert.ok(bottleneck.primaryBottleneck.includes('Click-Through Rate'));
+  assert.ok(bottleneck.actionItems.length >= 3);
 
-
+  const scaling = diagnoseChannelAnalytics({
+    ctrPercent: 8.4,
+    retention30sPercent: 74,
+    avgViewDurationPercent: 55,
+    shortsBridgeClickPercent: 3.5,
+  });
+  assert.equal(scaling.overallHealth, 'Scaling to 50K');
+  assert.ok(scaling.projected60DaySubs >= 45000);
+});

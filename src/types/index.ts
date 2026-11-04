@@ -126,6 +126,38 @@ export interface VideoScript {
   ttsNarrationSpeed: string;
 }
 
+export interface DailyPostingItem {
+  day: string;
+  format: 'Long-Form Pillar' | 'YouTube Short' | 'Community Poll & Hook' | string;
+  whatToPost: string;
+  optimizationFocus: string;
+}
+
+export interface RetentionTacticItem {
+  window: string;
+  tactic: string;
+  execution: string;
+  retentionLift: string;
+}
+
+export interface WeeklyPerformanceTarget {
+  weekRange: string;
+  daysRange: string;
+  subscriberTarget: string;
+  weeklyViewsTarget: string;
+  ctrTarget: string;
+  retentionTarget: string;
+  cadenceSummary: string;
+  primaryFocus: string;
+}
+
+export interface AnalyticsPivotRule {
+  metricSignal: string;
+  threshold: string;
+  rootCause: string;
+  strategyAdjustment: string;
+}
+
 export interface ThumbnailData {
   conceptName: string;
   boldHeadline: string;
@@ -135,6 +167,11 @@ export interface ThumbnailData {
   secondaryElement: string;
   midjourneyPrompt: string;
   ctrPsychologyTips: string[];
+  dailyPostingSchedule?: DailyPostingItem[];
+  retentionPlaybook?: RetentionTacticItem[];
+  shortsAndLongFormStrategy?: string;
+  weeklyTargets?: WeeklyPerformanceTarget[];
+  analyticsPivots?: AnalyticsPivotRule[];
 }
 
 export interface SeoData {
@@ -146,3 +183,4 @@ export interface SeoData {
   pinnedComment: string;
   hashtags: string[];
 }
+

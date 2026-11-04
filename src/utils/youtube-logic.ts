@@ -333,5 +333,87 @@ export function calculateScriptMetrics(
   };
 }
 
+/**
+ * Diagnoses YouTube Studio analytics metrics (CTR %, 30-second Retention %, Shorts-to-Long Bridge %)
+ * and outputs concrete 60-day growth coach adjustments (Step 5)
+ */
+export function diagnoseChannelAnalytics(metrics: {
+  ctrPercent: number;
+  retention30sPercent: number;
+  avgViewDurationPercent: number;
+  shortsBridgeClickPercent: number;
+}): {
+  overallHealth: 'Scaling to 50K' | 'On Track' | 'Bottleneck Detected';
+  primaryBottleneck: string;
+  actionItems: string[];
+  projected60DaySubs: number;
+} {
+  const {
+    ctrPercent,
+    retention30sPercent,
+    avgViewDurationPercent,
+    shortsBridgeClickPercent,
+  } = metrics;
 
+  const actionItems: string[] = [];
+  let primaryBottleneck = 'None — Algorithm Velocity Unlocked';
 
+  if (ctrPercent < 5.5) {
+    primaryBottleneck = 'Low Impression Click-Through Rate (Packaging Bottleneck)';
+    actionItems.push(
+      'Swap thumbnail within 24 hours: reduce text to 2-3 high-contrast yellow/white words and enlarge the focal emotion by 35%.'
+    );
+    actionItems.push(
+      'Rewrite the first 45 characters of the title using a specific number or negative curiosity gap.'
+    );
+  } else {
+    actionItems.push(
+      'CTR is healthy (>= 5.5%): lock this thumbnail template and replicate its color contrast across your next 3 uploads.'
+    );
+  }
+
+  if (retention30sPercent < 65) {
+    if (primaryBottleneck.startsWith('None')) {
+      primaryBottleneck = 'First 30-Second Viewer Drop-Off (Hook Mismatch)';
+    }
+    actionItems.push(
+      'Delete all channel intros/logos: deliver the exact thumbnail promise in the first 5 seconds with an immediate pattern interrupt.'
+    );
+  }
+
+  if (avgViewDurationPercent < 45) {
+    if (primaryBottleneck.startsWith('None')) {
+      primaryBottleneck = 'Mid-Video Retention Decay (Pacing Drag)';
+    }
+    actionItems.push(
+      'Insert visual B-roll switches, on-screen text callouts, or sound FX every 20-30 seconds to reset viewer attention.'
+    );
+  }
+
+  if (shortsBridgeClickPercent < 2.0) {
+    actionItems.push(
+      'Pin a cliffhanger comment + attach the "Related Video" bridge on every Short pointing directly to your newest 8-10 min pillar video.'
+    );
+  }
+
+  // Calculate projected 60-day subscriber trajectory from analytics leverage
+  const ctrFactor = Math.max(0.4, Math.min(2.0, ctrPercent / 6.5));
+  const retentionFactor = Math.max(0.4, Math.min(2.0, avgViewDurationPercent / 48));
+  const bridgeFactor = Math.max(0.6, Math.min(1.6, shortsBridgeClickPercent / 2.5));
+  const rawSubs = Math.round(28000 * ctrFactor * retentionFactor * bridgeFactor);
+  const projected60DaySubs = Math.max(2500, Math.min(75000, rawSubs));
+
+  const overallHealth =
+    ctrPercent >= 6.5 && retention30sPercent >= 68 && avgViewDurationPercent >= 48
+      ? 'Scaling to 50K'
+      : ctrPercent >= 5.0 && avgViewDurationPercent >= 40
+      ? 'On Track'
+      : 'Bottleneck Detected';
+
+  return {
+    overallHealth,
+    primaryBottleneck,
+    actionItems,
+    projected60DaySubs,
+  };
+}

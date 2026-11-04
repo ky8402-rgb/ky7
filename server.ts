@@ -1325,39 +1325,182 @@ app.post('/api/youtube/generate-script', async (req: Request, res: Response) => 
 });
 
 // ----------------------------------------------------
-// API Route 5: Generate High-CTR Thumbnail Concept & Prompts (Step 5)
+// API Route 5: Grow to 50,000 Subscribers & High-CTR Lab (Step 5)
 // ----------------------------------------------------
 app.post('/api/youtube/generate-thumbnail-prompt', async (req: Request, res: Response) => {
   try {
     const { videoTitle, nicheName } = req.body;
     const title = videoTitle || '7 Psychological Habits That Make You Unfazed by Disrespect';
-    const niche = nicheName || 'Stoic Psychology';
+    const niche = nicheName || 'Stoic Philosophy & Dark Psychology';
+
+    const defaultThumbnail = {
+      conceptName: 'The Stoic Disdain / Golden Contrast',
+      boldHeadline: 'NEVER REACT',
+      headlineColor: '#FACC15', // Vibrant Yellow
+      backgroundColor: '#090D16',
+      focalElement: 'Cracked antique Roman marble bust with golden glowing eyes looking slightly off camera with utter calm.',
+      secondaryElement: 'Chaotic red motion blur spikes in the background representing angry mob / verbal chaos.',
+      midjourneyPrompt: `/imagine prompt: hyper-realistic close-up of a stoic Roman marble statue of Marcus Aurelius for a ${niche} channel, golden glowing cracks running through the marble, dark textured obsidian background, dramatic cinematic side-lighting with bright warm gold rim light, extreme 8k texture, rule of thirds composition, high contrast, clean negative space on left side for text --ar 16:9 --style raw --v 6.0`,
+      ctrPsychologyTips: [
+        'Maximum 2-3 words on the thumbnail ("NEVER REACT") in bold sans-serif so mobile viewers decode it in under 0.3 seconds.',
+        'High-contrast #FACC15 yellow text against #090D16 obsidian dark background creates an immediate visual stop-trigger in YouTube dark mode.',
+        'Complementary Title + Thumbnail rule: never repeat the exact title text on the thumbnail — let the thumbnail create the emotional question and the title provide the specific context.',
+        'Keep the bottom-right 15% of the 16:9 canvas completely free of text so YouTube duration timestamps (e.g., 09:40) never block the hook.'
+      ],
+      dailyPostingSchedule: [
+        {
+          day: 'Monday',
+          format: 'Long-Form Pillar #1 (8–10 mins)',
+          whatToPost: `Publish flagship ${niche} deep-dive essay at 2:00 PM EST + pin a polarizing debate question in the comments within 60 seconds of upload.`,
+          optimizationFocus: 'Test 2 thumbnail variants in the first 3 hours; aim for >= 7.0% CTR and >= 70% retention at 0:30.'
+        },
+        {
+          day: 'Tuesday',
+          format: 'YouTube Short #1 (45–58 secs)',
+          whatToPost: 'Extract the most shocking 45-second psychological paradox from Monday’s pillar video with a seamless loop ending.',
+          optimizationFocus: 'Attach Monday’s Long-Form video via the native "Related Video" bridge link to funnel Shorts viewers into 9-minute watch time.'
+        },
+        {
+          day: 'Wednesday',
+          format: 'YouTube Short #2 + Community Poll',
+          whatToPost: `Post a rapid-fire "3 Signs of..." Short at 12:00 PM EST + publish a 4-option image/text Community Poll testing Friday's video title.`,
+          optimizationFocus: 'Use the winning Community Poll option (>40% vote share) as Friday’s exact Long-Form title hook.'
+        },
+        {
+          day: 'Thursday',
+          format: 'Long-Form Pillar #2 (8–12 mins)',
+          whatToPost: `Publish high-demand search + browse ${niche} case study video targeting a high-curiosity pain point.`,
+          optimizationFocus: 'Place an open-loop mid-video payoff at the 55% mark and an end-screen handoff to Monday’s video.'
+        },
+        {
+          day: 'Friday',
+          format: 'YouTube Short #3 (50–59 secs)',
+          whatToPost: 'Post a high-tension story Short with 0.2s zero-dead-air cuts and yellow/white active word captions.',
+          optimizationFocus: 'Target >= 78% "Viewed vs. Swiped Away" rate and >= 105% average percentage viewed.'
+        },
+        {
+          day: 'Saturday',
+          format: 'Long-Form Pillar #3 OR Viral Synthesis Short #4',
+          whatToPost: 'Publish a weekend binge-worthy compilation or contrarian breakdown when competitor upload volume drops.',
+          optimizationFocus: 'Optimize end-screen click-through rate (>= 6%) to chain 2+ videos per viewer session.'
+        },
+        {
+          day: 'Sunday',
+          format: 'Analytics Audit, Batch Script & Thumbnail Lab',
+          whatToPost: 'Publish 1 Community curiosity post + review YouTube Studio CTR/AVD cohorts and batch-produce next week’s 3 Long-Form + 4 Shorts.',
+          optimizationFocus: 'Swap thumbnails on any video from the past 7 days sitting below 5.5% CTR.'
+        }
+      ],
+      retentionPlaybook: [
+        {
+          window: '0:00 – 0:05 (The 5-Second Hook Lock)',
+          tactic: 'Visual Proof + Stakes Before Context',
+          execution: 'Open immediately on the central conflict or paradox shown in the thumbnail. Zero channel intro bumper, zero "Hey guys, welcome back."',
+          retentionLift: '+18% to +24% fewer early drop-offs at the 0:30 mark'
+        },
+        {
+          window: '0:05 – 0:45 (The Open-Loop Contract)',
+          tactic: 'Plant the Final Payoff Early',
+          execution: 'Tease the most powerful rule or revelation (#4 or #7) within the first 35 seconds so viewers stay until the final third of the video.',
+          retentionLift: '+14% lift in mid-roll watch time'
+        },
+        {
+          window: 'Every 20–30 Seconds (Pattern Interrupt Cadence)',
+          tactic: 'Multi-Sensory Reset',
+          execution: 'Alternate camera zoom keyframes, b-roll angle switches, on-screen kinetic text callouts, and subtle low-frequency riser SFX every 25 seconds.',
+          retentionLift: 'Eliminates mid-video flatline decay between 02:00 and 06:00'
+        },
+        {
+          window: 'Final 20 Seconds (Binge-Session Handoff)',
+          tactic: 'Abrupt Bridge Without Sign-Off Clichés',
+          execution: 'Never say "In conclusion" or "Thanks for watching" (which triggers instant exit). Transition directly into the next problem and point to the on-screen video card.',
+          retentionLift: '2.1x higher session watch time & faster Browse algorithm promotion'
+        }
+      ],
+      shortsAndLongFormStrategy: `Use a synchronized "Discovery Feeder -> Depth Pillar" flywheel for ${niche}: publish 4–5 vertical Shorts (45–58s) per week engineered purely for top-of-funnel reach in the Shorts Shelf, and 2–3 Long-Form videos (8–12 mins) per week engineered for Suggested/Browse watch hours and high RPM. Every Short must dramatize ONE razor-sharp micro-hook and use YouTube Studio's native "Related Video" clickable link in the lower third to funnel viewers directly into your matching 9-minute Long-Form video.`,
+      weeklyTargets: [
+        {
+          weekRange: 'Weeks 1–2',
+          daysRange: 'Days 1–14',
+          subscriberTarget: '0 → 500 Subs',
+          weeklyViewsTarget: '10,000 – 25,000 Views',
+          ctrTarget: '6.0% – 7.0% CTR',
+          retentionTarget: '42%+ AVD (65%+ at 0:30)',
+          cadenceSummary: '6 Long-Form + 10 Shorts total',
+          primaryFocus: 'Algorithm Seed & Baseline Packaging: train YouTube on your exact audience avatar and identify your #1 highest-CTR topic cluster.'
+        },
+        {
+          weekRange: 'Weeks 3–4',
+          daysRange: 'Days 15–30',
+          subscriberTarget: '500 → 3,500 Subs',
+          weeklyViewsTarget: '60,000 – 140,000 Views',
+          ctrTarget: '7.5% – 8.5% CTR',
+          retentionTarget: '46%+ AVD (70%+ at 0:30)',
+          cadenceSummary: '6 Long-Form + 12 Shorts total',
+          primaryFocus: 'Double-Down on Outlier Format: replicate the visual motif and hook cadence of your top 2 videos from Weeks 1–2; unlock full YPP monetization.'
+        },
+        {
+          weekRange: 'Weeks 5–6',
+          daysRange: 'Days 31–45',
+          subscriberTarget: '3,500 → 18,000 Subs',
+          weeklyViewsTarget: '250,000 – 550,000 Views',
+          ctrTarget: '8.5% – 9.8% CTR',
+          retentionTarget: '50%+ AVD (74%+ at 0:30)',
+          cadenceSummary: '6 Long-Form + 14 Shorts total',
+          primaryFocus: 'Browse & Suggested Expansion: build 3-part episodic video chains linked via end screens so every new viewer watches 2.4+ videos per session.'
+        },
+        {
+          weekRange: 'Weeks 7–8',
+          daysRange: 'Days 46–60',
+          subscriberTarget: '18,000 → 50,000+ Subs',
+          weeklyViewsTarget: '800,000 – 1.8M+ Views',
+          ctrTarget: '9.5% – 11.5% CTR',
+          retentionTarget: '52%+ AVD (76%+ at 0:30)',
+          cadenceSummary: '6 Long-Form + 14 Shorts total',
+          primaryFocus: 'Viral Flywheel & Authority Lock: scale sequel videos to your top-performing outlier hits and convert high-velocity Shorts traffic via Related Video bridges.'
+        }
+      ],
+      analyticsPivots: [
+        {
+          metricSignal: 'High Impressions, Low CTR (< 5.0%)',
+          threshold: 'CTR below 5.0% after 5,000 impressions',
+          rootCause: 'Thumbnail is visually cluttered or title lacks an emotional curiosity gap.',
+          strategyAdjustment: 'Do NOT delete the video. Within 24 hours, upload a new thumbnail with 2 bold yellow/white words, 1 enlarged focal statue/face, and rewrite the first 45 characters of the title.'
+        },
+        {
+          metricSignal: 'Steep First 30-Second Drop (< 60% still watching at 0:30)',
+          threshold: 'More than 40% of viewers leave in the first 30 seconds',
+          rootCause: 'Clickbait mismatch or slow throat-clearing intro that delays the promised topic.',
+          strategyAdjustment: 'Start the very next script with immediate visual validation of the thumbnail in seconds 0–5 and cut all introductory pleasantries.'
+        },
+        {
+          metricSignal: 'Mid-Video Retention Cliff (Gradual bleed between 02:00–05:00)',
+          threshold: 'Average View Duration falls below 40% on 8–10 min videos',
+          rootCause: 'Monotone narration pacing or static visuals staying on screen longer than 8 seconds.',
+          strategyAdjustment: 'Increase TTS speed to 1.05x, cut every pause >0.3s, and force a visual B-roll change + on-screen kinetic text callout every 20–25 seconds.'
+        },
+        {
+          metricSignal: 'High Views, Low Subscriber Conversion (< 0.8% view-to-sub ratio)',
+          threshold: 'Fewer than 80 new subscribers per 10,000 views',
+          rootCause: 'Viewers consume the single video as a one-off answer without seeing a reason to join a recurring series.',
+          strategyAdjustment: 'Add a 4-second value-driven subscribe hook right after delivering the #1 insight (around 65% mark) and pitch a specific upcoming sequel video at the end.'
+        }
+      ]
+    };
 
     if (!ai) {
-      return res.json({
-        thumbnail: {
-          conceptName: 'The Stoic Disdain / Golden Contrast',
-          boldHeadline: 'NEVER REACT',
-          headlineColor: '#FACC15', // Vibrant Yellow
-          backgroundColor: '#090D16',
-          focalElement: 'Cracked antique Roman marble bust with golden glowing eyes looking slightly off camera with utter calm.',
-          secondaryElement: 'Chaotic red motion blur spikes in the background representing angry mob / verbal chaos.',
-          midjourneyPrompt: '/imagine prompt: hyper-realistic close-up of a stoic Roman marble statue of Marcus Aurelius, golden glowing cracks running through the marble, dark textured obsidian background, dramatic cinematic side-lighting with bright warm gold rim light, extreme 8k texture, rule of thirds composition, high contrast, clean negative space on left side for text --ar 16:9 --style raw --v 6.0',
-          ctrPsychologyTips: [
-            'Only 2 words on the thumbnail ("NEVER REACT") to maximize readability on mobile screens.',
-            'High contrast yellow against deep black creates instant focal gaze trigger.',
-            'Face element (even a statue) triggers human facial recognition circuitry in the amygdala.',
-            'Negative space on the left ensures thumbnail text never overlaps with YouTube duration timestamp badge in bottom right.'
-          ]
-        }
-      });
+      return res.json({ thumbnail: defaultThumbnail });
     }
+
+    const masterPrompt = `Act as my YouTube growth coach. Create a detailed 60-day growth plan for my ${niche} channel, starting from zero subscribers. Tell me what to post daily, how to optimize titles and thumbnails, how to improve audience retention, and how to use Shorts and long-form videos strategically. Include weekly performance targets and explain how to adjust the strategy based on analytics.`;
 
     const response = await ai.models.generateContent({
       model: 'gemini-3.8-flash',
-      contents: `Create a high-CTR YouTube thumbnail blueprint and Midjourney prompt for the video: "${title}" in niche "${niche}". Focus on 2-3 word bold text hook, contrasting color palette, facial or psychological focal element, and mobile readability.`,
+      contents: `${masterPrompt}
+
+Also create a high-CTR YouTube thumbnail blueprint and Midjourney prompt for the flagship video: "${title}" in the "${niche}" niche.`,
       config: {
-        systemInstruction: 'You are a veteran YouTube thumbnail designer with an average 12%+ CTR track record. Follow YouTube thumbnail best practices: extreme contrast, 2-3 words max, rule of thirds, clear focal point.',
+        systemInstruction: 'You are an elite YouTube growth coach and thumbnail strategist who has scaled multiple faceless channels from 0 to 50,000+ subscribers in 60 days. Return a complete, actionable JSON response matching the schema.',
         responseMimeType: 'application/json',
         responseSchema: {
           type: Type.OBJECT,
@@ -1372,9 +1515,89 @@ app.post('/api/youtube/generate-thumbnail-prompt', async (req: Request, res: Res
                 focalElement: { type: Type.STRING },
                 secondaryElement: { type: Type.STRING },
                 midjourneyPrompt: { type: Type.STRING },
-                ctrPsychologyTips: { type: Type.ARRAY, items: { type: Type.STRING } }
+                ctrPsychologyTips: { type: Type.ARRAY, items: { type: Type.STRING } },
+                dailyPostingSchedule: {
+                  type: Type.ARRAY,
+                  items: {
+                    type: Type.OBJECT,
+                    properties: {
+                      day: { type: Type.STRING },
+                      format: { type: Type.STRING },
+                      whatToPost: { type: Type.STRING },
+                      optimizationFocus: { type: Type.STRING }
+                    },
+                    required: ['day', 'format', 'whatToPost', 'optimizationFocus']
+                  }
+                },
+                retentionPlaybook: {
+                  type: Type.ARRAY,
+                  items: {
+                    type: Type.OBJECT,
+                    properties: {
+                      window: { type: Type.STRING },
+                      tactic: { type: Type.STRING },
+                      execution: { type: Type.STRING },
+                      retentionLift: { type: Type.STRING }
+                    },
+                    required: ['window', 'tactic', 'execution', 'retentionLift']
+                  }
+                },
+                shortsAndLongFormStrategy: { type: Type.STRING },
+                weeklyTargets: {
+                  type: Type.ARRAY,
+                  items: {
+                    type: Type.OBJECT,
+                    properties: {
+                      weekRange: { type: Type.STRING },
+                      daysRange: { type: Type.STRING },
+                      subscriberTarget: { type: Type.STRING },
+                      weeklyViewsTarget: { type: Type.STRING },
+                      ctrTarget: { type: Type.STRING },
+                      retentionTarget: { type: Type.STRING },
+                      cadenceSummary: { type: Type.STRING },
+                      primaryFocus: { type: Type.STRING }
+                    },
+                    required: [
+                      'weekRange',
+                      'daysRange',
+                      'subscriberTarget',
+                      'weeklyViewsTarget',
+                      'ctrTarget',
+                      'retentionTarget',
+                      'cadenceSummary',
+                      'primaryFocus'
+                    ]
+                  }
+                },
+                analyticsPivots: {
+                  type: Type.ARRAY,
+                  items: {
+                    type: Type.OBJECT,
+                    properties: {
+                      metricSignal: { type: Type.STRING },
+                      threshold: { type: Type.STRING },
+                      rootCause: { type: Type.STRING },
+                      strategyAdjustment: { type: Type.STRING }
+                    },
+                    required: ['metricSignal', 'threshold', 'rootCause', 'strategyAdjustment']
+                  }
+                }
               },
-              required: ['conceptName', 'boldHeadline', 'headlineColor', 'backgroundColor', 'focalElement', 'secondaryElement', 'midjourneyPrompt', 'ctrPsychologyTips']
+              required: [
+                'conceptName',
+                'boldHeadline',
+                'headlineColor',
+                'backgroundColor',
+                'focalElement',
+                'secondaryElement',
+                'midjourneyPrompt',
+                'ctrPsychologyTips',
+                'dailyPostingSchedule',
+                'retentionPlaybook',
+                'shortsAndLongFormStrategy',
+                'weeklyTargets',
+                'analyticsPivots'
+              ]
             }
           },
           required: ['thumbnail']
@@ -1383,9 +1606,17 @@ app.post('/api/youtube/generate-thumbnail-prompt', async (req: Request, res: Res
     });
 
     const parsed = JSON.parse(response.text || '{}');
-    return res.json(parsed);
+    if (parsed.thumbnail) {
+      return res.json({
+        thumbnail: {
+          ...defaultThumbnail,
+          ...parsed.thumbnail,
+        }
+      });
+    }
+    return res.json({ thumbnail: defaultThumbnail });
   } catch (error: any) {
-    console.error('Error generating thumbnail concept:', error);
+    console.error('Error generating thumbnail & 50k growth plan:', error);
     return res.status(500).json({ error: error.message });
   }
 });

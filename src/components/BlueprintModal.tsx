@@ -20,7 +20,7 @@ export const BlueprintModal: React.FC<BlueprintModalProps> = ({ isOpen, onClose 
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-red-500" />
             <h3 className="font-extrabold text-white text-base">
-              Original Blueprint Reference Library (Uploaded Prompts #1, #2, #3 & #4)
+              Original Blueprint Reference Library (Uploaded Prompts #1, #2, #3, #4 &amp; #5)
             </h3>
           </div>
           <button
@@ -113,6 +113,26 @@ export const BlueprintModal: React.FC<BlueprintModalProps> = ({ isOpen, onClose 
                 "Act as an expert faceless YouTube scriptwriter. Write a complete [VIDEO LENGTH]-minute script about [TOPIC]. Include a powerful 5-second hook, engaging storytelling, scene-by-scene visual directions, on-screen text, editing instructions, and a compelling ending. Recommend free or affordable AI tools to create the video without showing my face or recording my voice."
               </div>
             </div>
+
+            {/* Blueprint #5 */}
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 space-y-3 flex flex-col md:col-span-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-sky-500/15 text-sky-400 border border-sky-500/30">
+                  Blueprint Step #5
+                </span>
+                <span className="text-[10px] text-zinc-400 font-mono">5. GROW TO 50,000 SUBSCRIBERS</span>
+              </div>
+              <div className="rounded-lg overflow-hidden border border-zinc-800 bg-black">
+                <img
+                  src="/assets/aistudio/IMG_20261104_074952_8da71528.jpg"
+                  alt="Blueprint 5: Grow to 50,000 Subscribers"
+                  className="w-full h-44 object-contain"
+                />
+              </div>
+              <div className="p-3 rounded-lg bg-zinc-950 border border-zinc-800 font-mono text-[11px] text-zinc-200 leading-relaxed flex-1">
+                "Act as my YouTube growth coach. Create a detailed 60-day growth plan for my [NICHE] channel, starting from zero subscribers. Tell me what to post daily, how to optimize titles and thumbnails, how to improve audience retention, and how to use Shorts and long-form videos strategically. Include weekly performance targets and explain how to adjust the strategy based on analytics."
+              </div>
+            </div>
           </div>
 
           <div className="p-4 rounded-xl bg-zinc-900/70 border border-zinc-800 text-xs">
@@ -130,19 +150,19 @@ export const BlueprintModal: React.FC<BlueprintModalProps> = ({ isOpen, onClose 
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                <span><strong>3. Generate 30 Viral Video Ideas</strong> (Titles, Hooks, Concepts & Thumbnails)</span>
+                <span><strong>3. Generate 30 Viral Video Ideas</strong> (Titles, Hooks, Concepts &amp; Thumbnails)</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                <span><strong>4. Create Videos With AI</strong> (5s Hook, Visuals, On-Screen Text & AI Tools)</span>
+                <span><strong>4. Create Videos With AI</strong> (5s Hook, Visuals, On-Screen Text &amp; AI Tools)</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                <span><strong>5. Thumbnail & Title Lab</strong> (Contrast & dark-mode simulator)</span>
+                <span><strong>5. Grow to 50,000 Subscribers</strong> (60-Day Daily Plan, CTR Lab, Retention &amp; Analytics)</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                <span><strong>6. SEO & Publishing Kit</strong> (Tags, timestamps, pinned comment)</span>
+                <span><strong>6. SEO &amp; Publishing Kit</strong> (Tags, timestamps, pinned comment)</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
