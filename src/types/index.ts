@@ -98,17 +98,31 @@ export interface ScriptSection {
   timestamp: string;
   durationSeconds: number;
   visualCue: string;
+  onScreenText?: string;
+  editingInstructions?: string;
   soundFX: string;
   voiceover: string;
   patternInterruptNote: string;
 }
 
+export interface AiVideoTool {
+  name: string;
+  category: 'AI Voiceover (No Mic)' | 'AI Visuals & B-Roll (No Camera)' | 'AI Video Editing & Captions' | 'Audio & SFX' | string;
+  pricingTier: string;
+  bestFor: string;
+  workflowTip: string;
+}
+
 export interface VideoScript {
   title: string;
+  targetLengthMinutes?: number;
   estimatedDuration: string;
   predictedRetention: string;
+  fiveSecondHook?: string;
   hookStrategy: string;
   sections: ScriptSection[];
+  compellingEnding?: string;
+  recommendedAiTools?: AiVideoTool[];
   ttsNarrationSpeed: string;
 }
 

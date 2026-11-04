@@ -286,4 +286,52 @@ export function summarizeVideoIdeas<
   };
 }
 
+/**
+ * Calculates script word count, total duration, speaking minutes, and average scene duration (Step 4)
+ */
+export function calculateScriptMetrics(
+  sections: { voiceover: string; durationSeconds: number }[]
+): {
+  totalWords: number;
+  totalDurationSeconds: number;
+  formattedDuration: string;
+  estimatedSpeakingMinutes: number;
+  avgSceneSeconds: number;
+} {
+  if (!sections || sections.length === 0) {
+    return {
+      totalWords: 0,
+      totalDurationSeconds: 0,
+      formattedDuration: '0:00',
+      estimatedSpeakingMinutes: 0,
+      avgSceneSeconds: 0,
+    };
+  }
+
+  const totalWords = sections.reduce((sum, sec) => {
+    const words = (sec.voiceover || '').trim().split(/\s+/).filter(Boolean).length;
+    return sum + words;
+  }, 0);
+
+  const totalDurationSeconds = sections.reduce(
+    (sum, sec) => sum + (Number(sec.durationSeconds) || 0),
+    0
+  );
+
+  const mins = Math.floor(totalDurationSeconds / 60);
+  const secs = totalDurationSeconds % 60;
+  const formattedDuration = `${mins}:${String(secs).padStart(2, '0')}`;
+  const estimatedSpeakingMinutes = Math.max(1, Math.round((totalWords / 150) * 10) / 10);
+  const avgSceneSeconds = Math.round(totalDurationSeconds / sections.length);
+
+  return {
+    totalWords,
+    totalDurationSeconds,
+    formattedDuration,
+    estimatedSpeakingMinutes,
+    avgSceneSeconds,
+  };
+}
+
+
 

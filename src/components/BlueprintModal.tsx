@@ -20,7 +20,7 @@ export const BlueprintModal: React.FC<BlueprintModalProps> = ({ isOpen, onClose 
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-red-500" />
             <h3 className="font-extrabold text-white text-base">
-              Original Blueprint Reference Library (Uploaded Prompts #1, #2 & #3)
+              Original Blueprint Reference Library (Uploaded Prompts #1, #2, #3 & #4)
             </h3>
           </div>
           <button
@@ -33,7 +33,7 @@ export const BlueprintModal: React.FC<BlueprintModalProps> = ({ isOpen, onClose 
 
         {/* Modal Content */}
         <div className="p-5 sm:p-6 overflow-y-auto space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {/* Blueprint #1 */}
             <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 space-y-3 flex flex-col">
               <div className="flex items-center justify-between">
@@ -93,6 +93,26 @@ export const BlueprintModal: React.FC<BlueprintModalProps> = ({ isOpen, onClose 
                 "Act as a YouTube content strategist. Generate 30 high-potential video ideas for my [NICHE] channel targeting [AUDIENCE]. For each idea, provide a clickable title, a strong opening hook, the video concept, and a thumbnail idea. Focus on trending topics, audience demand, and shareability."
               </div>
             </div>
+
+            {/* Blueprint #4 */}
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 space-y-3 flex flex-col">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-purple-500/15 text-purple-400 border border-purple-500/30">
+                  Blueprint Step #4
+                </span>
+                <span className="text-[10px] text-zinc-400 font-mono">4. CREATE VIDEOS WITH AI</span>
+              </div>
+              <div className="rounded-lg overflow-hidden border border-zinc-800 bg-black">
+                <img
+                  src="/assets/aistudio/IMG_20261104_075012_220ef1c9.jpg"
+                  alt="Blueprint 4: Create Videos With AI"
+                  className="w-full h-40 object-contain"
+                />
+              </div>
+              <div className="p-3 rounded-lg bg-zinc-950 border border-zinc-800 font-mono text-[11px] text-zinc-200 leading-relaxed flex-1">
+                "Act as an expert faceless YouTube scriptwriter. Write a complete [VIDEO LENGTH]-minute script about [TOPIC]. Include a powerful 5-second hook, engaging storytelling, scene-by-scene visual directions, on-screen text, editing instructions, and a compelling ending. Recommend free or affordable AI tools to create the video without showing my face or recording my voice."
+              </div>
+            </div>
           </div>
 
           <div className="p-4 rounded-xl bg-zinc-900/70 border border-zinc-800 text-xs">
@@ -114,7 +134,7 @@ export const BlueprintModal: React.FC<BlueprintModalProps> = ({ isOpen, onClose 
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                <span><strong>4. Faceless Script Studio</strong> (TTS teleprompter & visual cues)</span>
+                <span><strong>4. Create Videos With AI</strong> (5s Hook, Visuals, On-Screen Text & AI Tools)</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />

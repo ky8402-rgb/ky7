@@ -796,63 +796,115 @@ const INITIAL_CONTENT_PLAN: ContentPlan = {
 
 const INITIAL_SCRIPT: VideoScript = {
   title: '7 Psychological Habits That Make You Unfazed by Disrespect',
-  estimatedDuration: '8:45',
-  predictedRetention: '64%',
-  hookStrategy: 'Immediate high-stakes visual confrontation within 3 seconds, delaying the channel name until 2 minutes in.',
+  targetLengthMinutes: 9,
+  estimatedDuration: '9:00',
+  predictedRetention: '66.4%',
+  fiveSecondHook: '0:00–0:05 [VISUAL SHOCK + VERBAL FREEZE]: "When someone insults you in public, your heart spikes to 140 BPM in two seconds. Most people explode or freeze—but the most dangerous minds in history use a 3-second neurological switch that makes the attacker regret speaking."',
+  hookStrategy: 'Immediate high-stakes conflict in the first 5 seconds with zero channel intro logo, opening an unclosed curiosity loop ("Habit #4 inverts every argument") before minute 0:30.',
   sections: [
     {
-      sectionName: '0:00 - 0:15 The 3-Second Visual Freeze Hook',
+      sectionName: 'Scene 1: The 5-Second Visual & Neurological Hook',
       timestamp: '00:00',
       durationSeconds: 15,
-      visualCue: '[B-ROLL: Slow-motion close-up of a shattered Greek marble statue falling in reverse. High-contrast black and gold rim lighting.]',
-      soundFX: '[SFX: Low bass rumble followed by an abrupt ticking clock silence.]',
+      visualCue: '[SCENE VISUAL DIRECTION]: Slow-motion 4K close-up of a shattered Greek marble statue of Marcus Aurelius reassembling in reverse. High-contrast obsidian black background with molten gold rim lighting.',
+      onScreenText: '140 BPM CORTISOL SPIKE → THE 3-SECOND SWITCH',
+      editingInstructions: 'Start with a 2-frame white flash + hard sub-bass impact at 0:00. Apply a slow 1.15x dolly zoom-in on the statue eyes; cut on the exact beat at 0:05.',
+      soundFX: '[SFX: Deep 40Hz sub-bass drop followed by an abrupt ticking pocket-watch in dead silence]',
       voiceover: 'When someone insults you in public, your heart beats 140 times a minute. Most people either explode in anger or freeze in shame. But the most dangerous people in history do neither. They use a three-second neurological trick that makes the attacker look foolish without uttering a single curse word.',
-      patternInterruptNote: 'Cut to text on screen: "THE 3-SECOND RULE" with a gold pulse.'
+      patternInterruptNote: '0:05 Kinetic gold text slam: "THE 3-SECOND RULE" with camera shake.'
     },
     {
-      sectionName: '0:15 - 0:45 The Agitation & Curiosity Gap',
+      sectionName: 'Scene 2: Engaging Storytelling — The Emperor & The Senator',
       timestamp: '00:15',
-      durationSeconds: 30,
-      visualCue: '[B-ROLL: Cinematic footage of modern city rain and solitary figure walking through shadows. Rapid 1.5s cuts.]',
-      soundFX: '[SFX: Cinematic ambient synth swell and distant thunder.]',
-      voiceover: 'Notice how when you get defensive, you instantly surrender your power. You hand them the emotional remote control to your life. Today, you are going to learn the seven psychological behaviors of people who are psychologically untouchable. Habit number four will completely invert how you handle conflict forever.',
-      patternInterruptNote: 'Quick zoom-in transition with whoosh effect.'
+      durationSeconds: 45,
+      visualCue: '[SCENE VISUAL DIRECTION]: Dark atmospheric Roman Senate chamber in candlelight. A furious senator shouts while Emperor Marcus Aurelius sits completely motionless on an obsidian throne.',
+      onScreenText: 'HE WHO ANGERS YOU CONQUERS YOU',
+      editingInstructions: 'Use rapid 1.8-second cross-dissolves with a dark film-grain overlay (15% opacity) and subtle vignette. Pan slowly left-to-right across the candlelit parchment.',
+      soundFX: '[SFX: Distant rain, low cello drone, and subtle parchment rustle]',
+      voiceover: 'In 175 AD, a Roman senator stood before Marcus Aurelius and hurled treasonous insults for ten straight minutes, hoping to provoke a tyrant\'s rage. Notice how when you get defensive, you instantly surrender your power. You hand them the emotional remote control to your life. Today, you are going to learn the psychological habits of people who are emotionally untouchable—and Habit Number Four will completely invert how you handle conflict forever.',
+      patternInterruptNote: '0:35 Whoosh transition into anatomical brain split-screen.'
     },
     {
-      sectionName: '0:45 - 2:30 Habit 1: The Tactical Silence Pause',
-      timestamp: '00:45',
-      durationSeconds: 105,
-      visualCue: '[B-ROLL: Roman bust of Marcus Aurelius standing immovable amidst heavy storm winds. Camera slowly dollies in.]',
-      soundFX: '[SFX: Sub-bass drone, heartbeat monitor slowing down.]',
-      voiceover: 'Habit number one: The Tactical Silence. When someone throws an insult or passive-aggressive barb, our primitive amygdala screams at us to defend our reputation. Instead, look them directly into their left eye, remain completely expressionless, and count to four in your mind. Psychologists call this the "vacuum effect". In silence, the attacker is forced to hear their own disrespect echo in the room, making them look desperate and unstable.',
-      patternInterruptNote: 'Split-screen graphic showing Amygdala vs Prefrontal Cortex activation.'
+      sectionName: 'Scene 3: Habit #1 — The Tactical Silence Vacuum',
+      timestamp: '01:00',
+      durationSeconds: 120,
+      visualCue: '[SCENE VISUAL DIRECTION]: Minimalist dark-mode 3D brain animation showing the red amygdala cooling into glowing gold prefrontal cortex, followed by a shadow silhouette holding steady eye contact.',
+      onScreenText: 'HABIT 01: THE 4-SECOND VACUUM PAUSE',
+      editingInstructions: 'Insert a real 2.5-second audio pause after "count to four in your mind" while displaying a ticking countdown timer (04..03..02..01) in the center of the frame.',
+      soundFX: '[SFX: Heartbeat monitor slowing down from rapid to calm 60 BPM]',
+      voiceover: 'Habit number one: The Tactical Silence. When someone throws a passive-aggressive barb, our primitive amygdala screams at us to defend our tribe status. Instead, look directly at the bridge of their nose, remain completely expressionless, and count to four in your mind. Psychologists call this the Vacuum Effect. In silence, the attacker is forced to hear their own disrespect echo in the room, making them look desperate and unstable.',
+      patternInterruptNote: 'On-screen 4-second live countdown graphic forces viewer eye fixation.'
     },
     {
-      sectionName: '2:30 - 4:15 Habit 2: Agree and Amplify',
-      timestamp: '02:30',
-      durationSeconds: 105,
-      visualCue: '[B-ROLL: Chess board macro shot with pawn knocking down king. Golden hour backlight.]',
-      soundFX: '[SFX: Crisp chess piece sliding sound followed by subtle cinematic vinyl crackle.]',
-      voiceover: 'Habit number two: Agree and Amplify. Insults only sting if you fight them. When you resist, you confirm the blow landed. But if someone says, "You look tired and sloppy today," what happens if you smile and reply: "Honestly, you should have seen me yesterday, it was twice as bad"? You take their weapon and turn it into dust. You become impossible to bait.',
-      patternInterruptNote: 'Fast quote card overlay: "He who angers you conquers you." — Elizabeth Kenny.'
+      sectionName: 'Scene 4: Habit #2 — Agree & Amplify (Judo of the Mind)',
+      timestamp: '03:00',
+      durationSeconds: 120,
+      visualCue: '[SCENE VISUAL DIRECTION]: Macro shot of a black and gold chessboard. A single golden knight effortlessly sidesteps a charging rook as the rook slides off the edge of the board.',
+      onScreenText: 'HABIT 02: AGREE & AMPLIFY THE FRAME',
+      editingInstructions: 'Split screen comparison: Left side in desaturated red ("DEFENSIVE REACTION = WEAKNESS"), Right side in crisp gold ("AMPLIFIED HUMOR = DOMINANCE"). Use whip-pan transition.',
+      soundFX: '[SFX: Heavy marble chess piece sliding across stone + crisp metallic chime]',
+      voiceover: 'Habit number two: Agree and Amplify. Insults only sting if you fight them. When you resist, you validate the attacker\'s frame. But if a colleague says, "You look completely overwhelmed today," what happens if you smile calmly and reply: "Honestly, you should have seen me at 8 AM, it was three times worse"? You take their weapon and turn it into dust. You become impossible to bait.',
+      patternInterruptNote: 'Quote card pop-in with typewriter sound effect.'
     },
     {
-      sectionName: '4:15 - 6:30 Habit 3: The Emotional Audit',
-      timestamp: '04:15',
-      durationSeconds: 135,
-      visualCue: '[B-ROLL: Animated minimalist blueprint drawing of a fortified castle citadel surrounded by water.]',
-      soundFX: '[SFX: Deep cello melody with subtle ambient tape saturation.]',
-      voiceover: 'Habit number three: The Emotional Audit. Epictetus taught that men are disturbed not by things, but by the view which they take of them. When someone attacks you, ask yourself: Does this person have the wisdom I aspire to? If not, why would I value their criticism? You do not ask a blind man for directions, so do not ask a bitter person for your self-worth.',
-      patternInterruptNote: 'Sound of page turning with key takeaway checklist highlighted.'
+      sectionName: 'Scene 5: Habit #3 & #4 — The Epictetus Mirror Audit',
+      timestamp: '05:00',
+      durationSeconds: 150,
+      visualCue: '[SCENE VISUAL DIRECTION]: Architectural blueprint of an ancient island citadel surrounded by stormy black waves, transitioning to a cracked mirror reflecting a calm golden bust.',
+      onScreenText: 'HABIT 03: NEVER TAKE CRITICISM FROM SOMEONE YOU WOULDN\'T TAKE ADVICE FROM',
+      editingInstructions: 'Apply slow Ken Burns zoom-out (120% to 100% scale) over 12 seconds. Highlight key phrases in yellow CapCut-style dynamic word-by-word captions.',
+      soundFX: '[SFX: Deep Hans-Zimmer-style brass swell + distant ocean waves]',
+      voiceover: 'Habit number three: The Epictetus Audit. Epictetus taught that men are disturbed not by things, but by the view which they take of them. When someone attacks you, ask yourself one ruthless question: Would I trade places with this person\'s mind? If not, why would you rent them space in yours? Every insult is actually an autobiography of the speaker\'s own insecurity.',
+      patternInterruptNote: 'Invert screen colors for 0.4s on the word "autobiography".'
     },
     {
-      sectionName: '6:30 - 8:45 The Final Climax & Binge Loop CTA',
-      timestamp: '06:30',
-      durationSeconds: 135,
-      visualCue: '[B-ROLL: Majestic mountain peak at dawn with golden sunrise breaking through dark clouds. End screen card elements slide in at 8:25.]',
-      soundFX: '[SFX: Uplifting cinematic brass crescendo.]',
-      voiceover: 'Mastering disrespect is not about being cold; it is about recognizing your own sovereign peace. If this shifted your perspective today, tap the subscribe button and join our archive of disciplined minds. Next, click the video on your screen right now to discover the dark psychology of quiet people and why the world fears those who do not speak.',
-      patternInterruptNote: 'Interactive YouTube end screen video cards appear with animated pointing arrows.'
+      sectionName: 'Scene 6: Compelling Ending & Binge-Loop Handoff',
+      timestamp: '07:30',
+      durationSeconds: 90,
+      visualCue: '[SCENE VISUAL DIRECTION]: Solitary cloaked figure standing atop an obsidian mountain peak watching a golden sunrise break through storm clouds. Dual YouTube End-Screen frames animate in at 08:40.',
+      onScreenText: 'NEXT STEP: THE DARK PSYCHOLOGY OF QUIET PEOPLE →',
+      editingInstructions: 'Bring background orchestral strings up by +4dB. Keep the final 20 seconds fast-paced with no "thanks for watching" sign-off—point directly to the on-screen end card.',
+      soundFX: '[SFX: Uplifting cinematic orchestral crescendo + crisp arrow whoosh]',
+      voiceover: 'Mastering disrespect is not about becoming cold; it is about guarding your sovereign peace so fiercely that chaos cannot enter. Now that you know how to neutralize verbal attacks, you need to master the power of silence itself. Click the video on your screen right now to discover the dark psychology of quiet people—and why everyone secretly fears the person who speaks last.',
+      patternInterruptNote: 'Animated glowing gold arrow pointing to the End Screen video card.'
+    }
+  ],
+  compellingEnding: 'Never say "Thanks for watching" (which triggers a 70% viewer drop-off). Close with a philosophical mic-drop ("Every insult is an autobiography of the speaker\'s insecurity") and immediately bridge into a curiosity gap for the next video on screen ("Click the video on your screen right now to discover the dark psychology of quiet people").',
+  recommendedAiTools: [
+    {
+      name: 'ElevenLabs (Free Tier) / Clipchamp Neural TTS (100% Free)',
+      category: 'AI Voiceover (No Mic)',
+      pricingTier: 'Free / $5 mo Starter',
+      bestFor: 'Deep, authoritative baritone narration without ever recording your own voice.',
+      workflowTip: 'Use the "Adam" or "Marcus" deep voice profile in ElevenLabs (or "Christopher Neural" in free Microsoft Clipchamp) at 1.05x speed with 0.3s pauses between sentences.'
+    },
+    {
+      name: 'Leonardo.ai / Ideogram 2.0 / Bing Image Creator',
+      category: 'AI Visuals & B-Roll (No Camera)',
+      pricingTier: '100% Free Daily Credits',
+      bestFor: 'Generating 16:9 dark marble Stoic statues, chiaroscuro scenes, and anatomical brain graphics.',
+      workflowTip: 'Copy the [SCENE VISUAL DIRECTION] prompts from each scene above and append "--ar 16:9, dark cinematic obsidian and gold lighting, 8k photorealistic".'
+    },
+    {
+      name: 'Kling AI / Hailuo MiniMax / Pika Labs',
+      category: 'AI Visuals & B-Roll (No Camera)',
+      pricingTier: 'Free Daily Video Generations',
+      bestFor: 'Turning static AI images into 5-second slow-motion cinematic video clips (falling rain, flickering candles, moving clouds).',
+      workflowTip: 'Upload your Leonardo.ai statue image and prompt: "Subtle slow camera dolly-in, golden dust particles floating in air, 24fps cinematic motion".'
+    },
+    {
+      name: 'CapCut Desktop (Free) / DaVinci Resolve (Free)',
+      category: 'AI Video Editing & Captions',
+      pricingTier: '100% Free',
+      bestFor: 'Assembling scenes, adding 1-click Auto-Captions, Ken Burns keyframes, and dark color grading.',
+      workflowTip: 'Drop all voiceover audio on Track 1, remove silences >0.4s automatically, apply "Auto Captions" with bold yellow/white highlight on active words, and add "Pendulum" slow zoom.'
+    },
+    {
+      name: 'Pixabay Audio / YouTube Audio Library / Freesound',
+      category: 'Audio & SFX',
+      pricingTier: '100% Free (Royalty-Free)',
+      bestFor: 'Dark ambient cello drones, 40Hz sub-bass drops, ticking clocks, and whoosh transitions.',
+      workflowTip: 'Set background dark ambient music to -22dB so the AI narrator voiceover sits crystal-clear at -6dB.'
     }
   ],
   ttsNarrationSpeed: '1.05x speed recommended for optimal retention rhythm'
@@ -990,6 +1042,10 @@ export default function App() {
     setActiveVideoTitle(video.title);
     setCurrentStep(4);
     setIsLoading(true);
+    const parsedMinutes = parseInt(String(video.targetDuration || '9').split(':')[0], 10);
+    const lengthMinutes = video.format.toLowerCase().includes('short')
+      ? 1
+      : Math.max(1, isNaN(parsedMinutes) ? 9 : parsedMinutes);
     try {
       const res = await fetch('/api/youtube/generate-script', {
         method: 'POST',
@@ -999,11 +1055,15 @@ export default function App() {
           nicheName: activeNiche.name,
           channelName: activeChannelName,
           videoType: video.format,
+          videoLengthMinutes: lengthMinutes,
         }),
       });
       const data = await res.json();
       if (data.script) {
-        setScript(data.script);
+        setScript({
+          ...INITIAL_SCRIPT,
+          ...data.script,
+        });
       }
     } catch (e) {
       console.error(e);
@@ -1012,21 +1072,28 @@ export default function App() {
     }
   };
 
-  const handleRegenerateScript = async () => {
+  const handleRegenerateScript = async (customTopic?: string, customLengthMinutes?: number) => {
+    const topicToUse = (customTopic || activeVideoTitle).trim();
+    const lengthToUse = customLengthMinutes || script.targetLengthMinutes || 9;
+    setActiveVideoTitle(topicToUse);
     setIsLoading(true);
     try {
       const res = await fetch('/api/youtube/generate-script', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          videoTitle: activeVideoTitle,
+          videoTitle: topicToUse,
           nicheName: activeNiche.name,
           channelName: activeChannelName,
+          videoLengthMinutes: lengthToUse,
         }),
       });
       const data = await res.json();
       if (data.script) {
-        setScript(data.script);
+        setScript({
+          ...INITIAL_SCRIPT,
+          ...data.script,
+        });
       }
     } catch (e) {
       console.error(e);

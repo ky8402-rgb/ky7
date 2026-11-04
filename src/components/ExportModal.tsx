@@ -100,21 +100,31 @@ ${week.videos.map((v, idx) => `- **Idea #${v.ideaNumber ?? idx + 1}: [${v.format
 
 ---
 
-## 4. LAUNCH VIDEO SCRIPT: "${script.title}"
-- **Target Duration:** ${script.estimatedDuration}
+## 4. CREATE VIDEOS WITH AI — SCRIPT & PRODUCTION: "${script.title}"
+- **Target Duration:** ${script.targetLengthMinutes ?? 9} Minutes (${script.estimatedDuration})
 - **Predicted Retention:** ${script.predictedRetention}
-- **Hook Strategy:** ${script.hookStrategy}
+- **Powerful 5-Second Hook:** ${script.fiveSecondHook || script.hookStrategy}
+- **Storytelling Strategy:** ${script.hookStrategy}
 - **Recommended Pace:** ${script.ttsNarrationSpeed}
 
-### Timeline Script Breakdown:
-${script.sections.map(s => `
-#### [${s.timestamp}] ${s.sectionName} (${s.durationSeconds}s)
-- **Visual B-Roll:** ${s.visualCue}
-- **SFX:** ${s.soundFX}
+### Scene-by-Scene Visual Directions, On-Screen Text & Editing Breakdown:
+${script.sections.map((s, idx) => `
+#### Scene #${idx + 1}: [${s.timestamp}] ${s.sectionName} (${s.durationSeconds}s)
+- **Scene Visual Direction:** ${s.visualCue}
+- **On-Screen Text Overlay:** "${s.onScreenText || s.patternInterruptNote}"
+- **Editing Instructions:** ${s.editingInstructions || 'Slow keyframe zoom-in with dynamic captions.'}
+- **Sound FX:** ${s.soundFX}
 - **Pattern Interrupt:** ${s.patternInterruptNote}
-- **Voiceover Narration:**
+- **Storytelling Voiceover:**
   > "${s.voiceover}"
 `).join('\n')}
+
+### Compelling Ending & Binge-Loop Handoff:
+${script.compellingEnding || 'Close with a high-impact takeaway and direct viewers to the on-screen end card video.'}
+
+### Recommended Free & Affordable AI Tools (No Face, No Voice Recording):
+${(script.recommendedAiTools || []).map(t => `- **${t.name}** [${t.category} — ${t.pricingTier}]: ${t.bestFor}
+  - *Workflow Tip:* ${t.workflowTip}`).join('\n')}
 
 ---
 

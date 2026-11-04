@@ -9,6 +9,7 @@ import {
   formatChannelKeywords,
   calculateChecklistProgress,
   summarizeVideoIdeas,
+  calculateScriptMetrics,
 } from './youtube-logic.js';
 
 test('calculateChannelRevenue calculates AdSense, Affiliate, and Sponsor revenue accurately', () => {
@@ -109,5 +110,17 @@ test('summarizeVideoIdeas calculates counts, avgShareability, and filters accura
   assert.equal(summary.avgShareability, 95);
   assert.equal(summary.filteredIdeas.length, 2);
 });
+
+test('calculateScriptMetrics computes total words, formatted duration, and speaking pace accurately', () => {
+  const metrics = calculateScriptMetrics([
+    { voiceover: 'One two three four five six seven eight nine ten', durationSeconds: 45 },
+    { voiceover: 'Eleven twelve thirteen fourteen fifteen', durationSeconds: 75 },
+  ]);
+  assert.equal(metrics.totalWords, 15);
+  assert.equal(metrics.totalDurationSeconds, 120);
+  assert.equal(metrics.formattedDuration, '2:00');
+  assert.equal(metrics.avgSceneSeconds, 60);
+});
+
 
 
