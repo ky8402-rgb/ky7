@@ -690,7 +690,7 @@ export const BrandingStep: React.FC<BrandingStepProps> = ({
           onClick={onProceedToContent}
           className="px-6 py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-semibold text-sm flex items-center gap-2 shadow-lg shadow-red-600/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
         >
-          <span>Proceed to Step 3: 60-Day Content Roadmap</span>
+          <span>Proceed to Step 3: Generate 30 Viral Video Ideas</span>
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>

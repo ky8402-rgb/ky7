@@ -227,3 +227,63 @@ export function calculateChecklistProgress(items: { completed: boolean }[]): {
   };
 }
 
+/**
+ * Summarizes and filters a list of generated viral video ideas (Step 3)
+ */
+export function summarizeVideoIdeas<
+  T extends {
+    title: string;
+    format: string;
+    viralDriver?: string;
+    shareabilityScore?: number;
+  }
+>(
+  ideas: T[],
+  options?: {
+    formatFilter?: string;
+    driverFilter?: string;
+    searchQuery?: string;
+  }
+): {
+  filteredIdeas: T[];
+  totalCount: number;
+  longFormCount: number;
+  shortsCount: number;
+  avgShareability: number;
+} {
+  const totalCount = ideas.length;
+  const longFormCount = ideas.filter(i => !i.format.toLowerCase().includes('short')).length;
+  const shortsCount = ideas.filter(i => i.format.toLowerCase().includes('short')).length;
+
+  const scores = ideas.map(i => i.shareabilityScore ?? 92);
+  const avgShareability =
+    scores.length > 0
+      ? Math.round(scores.reduce((sum, val) => sum + val, 0) / scores.length)
+      : 0;
+
+  const formatFilter = options?.formatFilter || 'All';
+  const driverFilter = options?.driverFilter || 'All';
+  const query = (options?.searchQuery || '').trim().toLowerCase();
+
+  const filteredIdeas = ideas.filter(idea => {
+    const matchesFormat =
+      formatFilter === 'All' ||
+      idea.format.toLowerCase().includes(formatFilter.toLowerCase());
+    const matchesDriver =
+      driverFilter === 'All' ||
+      (idea.viralDriver || '').toLowerCase().includes(driverFilter.toLowerCase());
+    const matchesSearch =
+      !query || idea.title.toLowerCase().includes(query);
+    return matchesFormat && matchesDriver && matchesSearch;
+  });
+
+  return {
+    filteredIdeas,
+    totalCount,
+    longFormCount,
+    shortsCount,
+    avgShareability,
+  };
+}
+
+

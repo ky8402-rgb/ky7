@@ -8,6 +8,7 @@ import {
   validateYouTubeHandle,
   formatChannelKeywords,
   calculateChecklistProgress,
+  summarizeVideoIdeas,
 } from './youtube-logic.js';
 
 test('calculateChannelRevenue calculates AdSense, Affiliate, and Sponsor revenue accurately', () => {
@@ -94,4 +95,19 @@ test('calculateChecklistProgress computes accurate completion percentage', () =>
   assert.equal(stats.totalCount, 4);
   assert.equal(stats.percentage, 50);
 });
+
+test('summarizeVideoIdeas calculates counts, avgShareability, and filters accurately', () => {
+  const sampleIdeas = [
+    { title: '7 Stoic Rules for Chaos', format: 'Long-Form', viralDriver: 'Trending Topic', shareabilityScore: 96 },
+    { title: 'Never React Instantly #Shorts', format: 'Shorts', viralDriver: 'Extreme Shareability', shareabilityScore: 98 },
+    { title: 'How to Master Silence', format: 'Long-Form', viralDriver: 'High Audience Demand', shareabilityScore: 91 },
+  ];
+  const summary = summarizeVideoIdeas(sampleIdeas, { formatFilter: 'Long-Form' });
+  assert.equal(summary.totalCount, 3);
+  assert.equal(summary.longFormCount, 2);
+  assert.equal(summary.shortsCount, 1);
+  assert.equal(summary.avgShareability, 95);
+  assert.equal(summary.filteredIdeas.length, 2);
+});
+
 

@@ -545,142 +545,491 @@ app.post('/api/youtube/generate-branding', async (req: Request, res: Response) =
 });
 
 // ----------------------------------------------------
-// API Route 3: Generate 60-Day Content Roadmap (Step 3)
+// API Route 3: Generate 30 Viral Video Ideas (Step 3)
 // ----------------------------------------------------
 app.post('/api/youtube/generate-content-plan', async (req: Request, res: Response) => {
   try {
-    const { nicheName, channelName } = req.body;
-    const niche = nicheName || 'Stoic Life Psychology';
+    const { nicheName, channelName, targetAudience } = req.body;
+    const niche = nicheName || 'Stoic Life Psychology & Dark Mindset Lessons';
     const channel = channelName || 'Mindset Vault';
+    const audience =
+      targetAudience ||
+      'Ambitious 18-35 year-old professionals, students, and self-improvers seeking emotional resilience and competitive mental advantages';
+
+    const defaultPlan = {
+      strategy: `The 30-Idea Viral Velocity Matrix for ${channel}: 6 strategic weekly sprints (5 high-potential videos per week = 30 viral ideas) balancing Trending Topics, High Audience Demand search pillars, and Extreme Shareability social triggers.`,
+      targetAudience: audience,
+      weeks: [
+        {
+          weekNumber: 1,
+          phase: 'Sprint 1 (Ideas #1–#5): Algorithmic Seeding & Emotional Mastery',
+          videos: [
+            {
+              id: 'w1-v1',
+              ideaNumber: 1,
+              title: '7 Psychological Habits That Make You Unfazed by Disrespect',
+              format: 'Long-Form',
+              targetDuration: '9:40',
+              uploadDay: 'Monday',
+              hook: 'When someone insults you in public, your heart beats 140 times a minute. Here is the 3-second neurological freeze rule that makes the attacker look foolish without a single word.',
+              concept: 'Breaks down 7 behavioral psychology and Stoic techniques (Tactical Silence, Agree & Amplify, Emotional Audit) that neutralize verbal disrespect in real-world social and workplace settings.',
+              thumbnailConcept: 'Split screen: Cluttered agitated red brain vs calm obsidian marble statue with gold eye glow and text "UNTOUCHABLE".',
+              predictedCTR: '12.4%',
+              viralDriver: 'High Audience Demand',
+              shareabilityScore: 97
+            },
+            {
+              id: 'w1-v2',
+              ideaNumber: 2,
+              title: 'The Dark Psychology of Quiet People (Why Everyone FEARS Them)',
+              format: 'Long-Form',
+              targetDuration: '10:15',
+              uploadDay: 'Wednesday',
+              hook: 'Why do the most powerful people in any room speak 40% slower and 60% less than everyone else? Because silence triggers a primal uncertainty loop in the human brain.',
+              concept: 'Explores the "Vacuum Effect" in human communication—why withholding immediate validation commands authority, forces others to over-explain, and projects unshakable status.',
+              thumbnailConcept: 'Silhouette in shadow with intense amber rim light and bold 2-word text "NEVER TALK".',
+              predictedCTR: '13.8%',
+              viralDriver: 'Trending Topic',
+              shareabilityScore: 98
+            },
+            {
+              id: 'w1-v3',
+              ideaNumber: 3,
+              title: 'Never React Instantly: The Marcus Aurelius 4-Second Rule #Shorts',
+              format: 'Shorts',
+              targetDuration: '0:52',
+              uploadDay: 'Thursday',
+              hook: 'If someone disrespects you today, do NOT say a word for four full seconds. Watch what happens to their face.',
+              concept: 'Rapid-fire 50-second demonstration of how a 4-second deadpan stare breaks an aggressor\'s dopamine loop, paired with a quote from Meditations Book IV.',
+              thumbnailConcept: 'Marcus Aurelius bust zoomed in on eyes with red countdown timer "0:04".',
+              predictedCTR: '15.2%',
+              viralDriver: 'Extreme Shareability',
+              shareabilityScore: 96
+            },
+            {
+              id: 'w1-v4',
+              ideaNumber: 4,
+              title: 'How to Read Anyone Instantly: 6 Micro-Behaviors That Expose Fake Friends',
+              format: 'Long-Form',
+              targetDuration: '11:05',
+              uploadDay: 'Friday',
+              hook: 'A fake friend will never betray you to your face first—they will betray you with a 0.3-second facial micro-expression when you share good news.',
+              concept: 'Analyzes behavioral tells from FBI interrogation manuals and Machiavellian psychology to spot covert envy, backhanded compliments, and loyalty tests.',
+              thumbnailConcept: 'Smiling mask cracking to reveal cold golden eyes underneath with text "FAKE FRIEND".',
+              predictedCTR: '12.9%',
+              viralDriver: 'High Audience Demand',
+              shareabilityScore: 95
+            },
+            {
+              id: 'w1-v5',
+              ideaNumber: 5,
+              title: 'The 1 Sentence That Destroys Manipulation Instantly #Shorts',
+              format: 'Shorts',
+              targetDuration: '0:45',
+              uploadDay: 'Sunday',
+              hook: 'When a manipulator tries to guilt-trip you, repeat this exact 6-word question and watch them panic.',
+              concept: 'Gives viewers a plug-and-play verbal counter-frame ("What are you hoping I feel?") that exposes covert guilt-tripping on the spot.',
+              thumbnailConcept: 'Puppet strings being sliced by a golden blade with text "SAY THIS".',
+              predictedCTR: '14.6%',
+              viralDriver: 'Extreme Shareability',
+              shareabilityScore: 99
+            }
+          ]
+        },
+        {
+          weekNumber: 2,
+          phase: 'Sprint 2 (Ideas #6–#10): Curiosity Loops & Contrarian Mindset',
+          videos: [
+            {
+              id: 'w2-v1',
+              ideaNumber: 6,
+              title: 'Why 99% of People Fail Stoicism (The Comfort Trap Exposed)',
+              format: 'Long-Form',
+              targetDuration: '8:55',
+              uploadDay: 'Monday',
+              hook: 'You read Meditations, you watched the videos, and you still lost your temper yesterday. That is because modern Stoicism left out the most brutal step.',
+              concept: 'Contrarian breakdown of "Performative Stoicism" vs Seneca\'s voluntary discomfort drills—teaching viewers how to inoculate their nervous system against chaos.',
+              thumbnailConcept: 'Broken classical pillar with red X mark and bold text "THE BIG LIE".',
+              predictedCTR: '11.4%',
+              viralDriver: 'Trending Topic',
+              shareabilityScore: 92
+            },
+            {
+              id: 'w2-v2',
+              ideaNumber: 7,
+              title: 'How to Disappear for 6 Months and Return UNRECOGNIZABLE',
+              format: 'Long-Form',
+              targetDuration: '12:20',
+              uploadDay: 'Wednesday',
+              hook: 'Every great transformation in history began with a period of strategic invisibility. Here is the 180-day Monk Mode blueprint.',
+              concept: 'Step-by-step ghost protocol covering dopamine detoxing, silent skill acquisition, circadian discipline, and eliminating social broadcasting.',
+              thumbnailConcept: 'Solitary hooded figure walking into foggy obsidian mountain with glowing gold path and text "GHOST MODE".',
+              predictedCTR: '14.5%',
+              viralDriver: 'Trending Topic',
+              shareabilityScore: 98
+            },
+            {
+              id: 'w2-v3',
+              ideaNumber: 8,
+              title: 'Stop Telling People Your Goals (The Dopamine Leak) #Shorts',
+              format: 'Shorts',
+              targetDuration: '0:50',
+              uploadDay: 'Thursday',
+              hook: 'The moment you announce your big goal to your friends, your brain marks it as already completed.',
+              concept: 'Explains Peter Gollwitzer\'s psychological research on "social reality substitution" and why keeping ambitions secret triples follow-through.',
+              thumbnailConcept: 'Zipper closing over glowing golden lips with text "KEEP QUIET".',
+              predictedCTR: '14.9%',
+              viralDriver: 'Extreme Shareability',
+              shareabilityScore: 97
+            },
+            {
+              id: 'w2-v4',
+              ideaNumber: 9,
+              title: '8 Harsh Truths About Human Nature You Must Accept Before 30',
+              format: 'Long-Form',
+              targetDuration: '10:50',
+              uploadDay: 'Friday',
+              hook: 'Nobody is coming to save you, and most people secretly want you to do well—just never better than them.',
+              concept: 'Synthesizes Arthur Schopenhauer, Robert Greene, and Epictetus into 8 liberating truths about status, reciprocity, and self-reliance.',
+              thumbnailConcept: 'Scale of justice tipping between gold crown and skull with text "HARSH TRUTHS".',
+              predictedCTR: '12.7%',
+              viralDriver: 'High Audience Demand',
+              shareabilityScore: 96
+            },
+            {
+              id: 'w2-v5',
+              ideaNumber: 10,
+              title: 'The "Boredom Test" That Separates Winners From Losers #Shorts',
+              format: 'Shorts',
+              targetDuration: '0:55',
+              uploadDay: 'Sunday',
+              hook: 'Can you sit in a quiet room for 10 minutes without touching your phone? If not, your attention span belongs to someone else.',
+              concept: 'Challenges viewers with Blaise Pascal\'s famous observation on solitude and gives a 60-second boredom tolerance reset.',
+              thumbnailConcept: 'Glowing smartphone chained to a stone statue hand with text "BREAK FREE".',
+              predictedCTR: '13.9%',
+              viralDriver: 'Trending Topic',
+              shareabilityScore: 94
+            }
+          ]
+        },
+        {
+          weekNumber: 3,
+          phase: 'Sprint 3 (Ideas #11–#15): High-Retention Deep Dives & Anxiety Control',
+          videos: [
+            {
+              id: 'w3-v1',
+              ideaNumber: 11,
+              title: 'The Art of Not Caring: How to Turn Off Overthinking in 60 Seconds',
+              format: 'Long-Form',
+              targetDuration: '9:30',
+              uploadDay: 'Monday',
+              hook: 'Overthinking is not an intelligence problem—it is a nervous system stuck in a false survival loop. Here is how to flip the kill switch.',
+              concept: 'Combines Epictetus\' Dichotomy of Control with the physiological sigh and cognitive defusion to stop late-night rumination.',
+              thumbnailConcept: 'Glowing brain diagram highlighting amygdala shutdown switch with text "TURN IT OFF".',
+              predictedCTR: '13.1%',
+              viralDriver: 'High Audience Demand',
+              shareabilityScore: 96
+            },
+            {
+              id: 'w3-v2',
+              ideaNumber: 12,
+              title: '5 Warning Signs Someone Is Silently Manipulating You',
+              format: 'Long-Form',
+              targetDuration: '10:45',
+              uploadDay: 'Wednesday',
+              hook: 'The most dangerous manipulators never raise their voice. They use a covert tactic psychologists call "intermittent reinforcement".',
+              concept: 'Exposes 5 subtle dark psychology tactics—breadcrumbing, moving the goalposts, triangulation, and weaponized empathy—and how to disarm each.',
+              thumbnailConcept: 'Golden puppet strings descending onto shadowed figure with text "THEY USE YOU".',
+              predictedCTR: '13.8%',
+              viralDriver: 'High Audience Demand',
+              shareabilityScore: 97
+            },
+            {
+              id: 'w3-v3',
+              ideaNumber: 13,
+              title: 'Why Being "Too Nice" Is Ruining Your Life (Nietzsche\'s Warning) #Shorts',
+              format: 'Shorts',
+              targetDuration: '0:54',
+              uploadDay: 'Thursday',
+              hook: 'If you cannot say no without feeling guilty, you are not a good person—you are a harmless person. And there is a massive difference.',
+              concept: 'Distinguishes between weakness disguised as politeness versus true virtue backed by boundaries and strength.',
+              thumbnailConcept: 'Sheep mask lifting off a golden lion statue with text "STOP PLEASING".',
+              predictedCTR: '15.4%',
+              viralDriver: 'Extreme Shareability',
+              shareabilityScore: 98
+            },
+            {
+              id: 'w3-v4',
+              ideaNumber: 14,
+              title: 'How to Build Iron Discipline When You Have Zero Motivation',
+              format: 'Long-Form',
+              targetDuration: '11:15',
+              uploadDay: 'Friday',
+              hook: 'Motivation is a fair-weather friend that abandons you the moment life gets hard. Discipline is an automated system that requires zero feelings.',
+              concept: 'Reveals the "Friction Inversion Protocol" used by elite performers to make hard habits effortless and bad habits impossible.',
+              thumbnailConcept: 'Spartan helmet forged in glowing molten gold with text "ZERO EXCUSES".',
+              predictedCTR: '12.2%',
+              viralDriver: 'High Audience Demand',
+              shareabilityScore: 94
+            },
+            {
+              id: 'w3-v5',
+              ideaNumber: 15,
+              title: 'Seneca\'s 3-Minute Nightly Ritual for Unshakable Peace #Shorts',
+              format: 'Shorts',
+              targetDuration: '0:49',
+              uploadDay: 'Sunday',
+              hook: 'Before Seneca closed his eyes in ancient Rome, he asked himself three ruthless questions in the dark.',
+              concept: 'Walks viewers through Seneca\'s evening moral audit from On Anger to clear mental clutter before sleep.',
+              thumbnailConcept: 'Candlelit Roman scroll and quill in dark marble chamber with text "ASK THIS".',
+              predictedCTR: '13.6%',
+              viralDriver: 'Extreme Shareability',
+              shareabilityScore: 95
+            }
+          ]
+        },
+        {
+          weekNumber: 4,
+          phase: 'Sprint 4 (Ideas #16–#20): Power Dynamics, Status & Binge Series',
+          videos: [
+            {
+              id: 'w4-v1',
+              ideaNumber: 16,
+              title: 'The Law of Detachment: Why Needing Nothing Gives You Everything',
+              format: 'Long-Form',
+              targetDuration: '10:30',
+              uploadDay: 'Monday',
+              hook: 'Have you ever noticed that the moment you stop caring whether you get the job, the deal, or the person, they suddenly chase you?',
+              concept: 'Explains the "Paradox of Pursuit" and how outcome independence shifts interpersonal power dynamics in career, negotiation, and relationships.',
+              thumbnailConcept: 'Open empty marble hand catching golden starlight with text "LET IT GO".',
+              predictedCTR: '13.5%',
+              viralDriver: 'Trending Topic',
+              shareabilityScore: 98
+            },
+            {
+              id: 'w4-v2',
+              ideaNumber: 17,
+              title: '10 Rules of Power The 1% Teach Their Children (Never Taught in School)',
+              format: 'Long-Form',
+              targetDuration: '12:40',
+              uploadDay: 'Wednesday',
+              hook: 'Schools train you to follow instructions and seek permission. Dynasty families train their children to own leverage and control perception.',
+              concept: 'Uncovers 10 unwritten rules of strategic thinking, asymmetric risk, emotional concealability, and network leverage.',
+              thumbnailConcept: 'Massive obsidian and gold vault door cracked open with text "HIDDEN RULES".',
+              predictedCTR: '15.1%',
+              viralDriver: 'Trending Topic',
+              shareabilityScore: 99
+            },
+            {
+              id: 'w4-v3',
+              ideaNumber: 18,
+              title: 'Never Explain Yourself Twice to Anyone #Shorts',
+              format: 'Shorts',
+              targetDuration: '0:46',
+              uploadDay: 'Thursday',
+              hook: 'People who demand constant explanations are not confused—they are looking for ammunition.',
+              concept: 'Punchy 45-second rule on why over-explaining signals subordination and how to state boundaries with a period, not a question mark.',
+              thumbnailConcept: 'Gold chess king standing alone facing row of black pawns with text "NEVER EXPLAIN".',
+              predictedCTR: '14.8%',
+              viralDriver: 'Extreme Shareability',
+              shareabilityScore: 97
+            },
+            {
+              id: 'w4-v4',
+              ideaNumber: 19,
+              title: 'How to Command Respect in Any Room Without Saying a Word',
+              format: 'Long-Form',
+              targetDuration: '9:50',
+              uploadDay: 'Friday',
+              hook: 'Before you open your mouth, every person in the room has already assigned you a status rank in less than 7 seconds.',
+              concept: 'Breaks down spatial posture, eye-contact cadence, vocal stillness, and non-reactive body language that project calm dominance.',
+              thumbnailConcept: 'Sharp suited silhouette entering dark boardroom with golden aura and text "INSTANT RESPECT".',
+              predictedCTR: '12.8%',
+              viralDriver: 'High Audience Demand',
+              shareabilityScore: 95
+            },
+            {
+              id: 'w4-v5',
+              ideaNumber: 20,
+              title: 'The Miyamoto Musashi Rule for Total Focus (Dokkodo) #Shorts',
+              format: 'Shorts',
+              targetDuration: '0:58',
+              uploadDay: 'Sunday',
+              hook: 'Seven days before his death after 61 undefeated duels, Miyamoto Musashi wrote 21 rules for walking alone.',
+              concept: 'Highlights 3 transformative precepts from Musashi\'s Dokkodo ("Do not regret what you have done", "Accept everything just the way it is").',
+              thumbnailConcept: 'Lone samurai silhouette under golden eclipse with text "WALK ALONE".',
+              predictedCTR: '15.5%',
+              viralDriver: 'Trending Topic',
+              shareabilityScore: 98
+            }
+          ]
+        },
+        {
+          weekNumber: 5,
+          phase: 'Sprint 5 (Ideas #21–#25): Shadow Work, Focus & Mental Warfare',
+          videos: [
+            {
+              id: 'w5-v1',
+              ideaNumber: 21,
+              title: 'Carl Jung: Until You Integrate Your Shadow, People Will Control You',
+              format: 'Long-Form',
+              targetDuration: '11:40',
+              uploadDay: 'Monday',
+              hook: 'The traits that irritate you most in other people are the exact parts of your own mind you refuse to look at.',
+              concept: 'Accessible deep dive into Jungian Shadow integration—showing how repressed aggression and ambition can be harnessed into creative power.',
+              thumbnailConcept: 'Classical statue casting a giant crowned monster shadow in gold light with text "YOUR SHADOW".',
+              predictedCTR: '13.3%',
+              viralDriver: 'Trending Topic',
+              shareabilityScore: 96
+            },
+            {
+              id: 'w5-v2',
+              ideaNumber: 22,
+              title: '7 Things High-Value Minds Never Waste Energy On',
+              format: 'Long-Form',
+              targetDuration: '9:20',
+              uploadDay: 'Wednesday',
+              hook: 'Your mental bandwidth is a fixed daily currency. Spend it arguing with fools at 9 AM, and you will be bankrupt by noon.',
+              concept: 'Audits the 7 biggest cognitive energy drains (winning petty arguments, seeking closure from toxic people, doomscrolling) and how to cut them.',
+              thumbnailConcept: 'Hourglass leaking glowing gold sand with red warning text "STOP WASTING IT".',
+              predictedCTR: '11.9%',
+              viralDriver: 'High Audience Demand',
+              shareabilityScore: 93
+            },
+            {
+              id: 'w5-v3',
+              ideaNumber: 23,
+              title: 'Why You Feel Exhausted Even When You Do Nothing #Shorts',
+              format: 'Shorts',
+              targetDuration: '0:51',
+              uploadDay: 'Thursday',
+              hook: 'You are not physically tired—your brain has 47 open emotional tabs running in the background.',
+              concept: 'Explains cognitive residue and open Zeigarnik loops, giving viewers a 2-minute brain-dump method to restore energy immediately.',
+              thumbnailConcept: 'Overheating glowing human head with 47 warning popups and text "BRAIN DRAIN".',
+              predictedCTR: '14.4%',
+              viralDriver: 'Extreme Shareability',
+              shareabilityScore: 97
+            },
+            {
+              id: 'w5-v4',
+              ideaNumber: 24,
+              title: 'The Machiavellian Guide to Surviving Office Politics (Without Losing Your Soul)',
+              format: 'Long-Form',
+              targetDuration: '10:55',
+              uploadDay: 'Friday',
+              hook: 'Hard work alone rarely gets promoted if you are politically naive. Here is how to protect your reputation from credit-thieves.',
+              concept: 'Combines Niccolò Machiavelli and Baltasar Gracián to teach ethical self-defense in competitive hierarchies.',
+              thumbnailConcept: 'Golden dagger hidden behind a polite handshake in dark suit with text "TRUST NO ONE".',
+              predictedCTR: '12.6%',
+              viralDriver: 'High Audience Demand',
+              shareabilityScore: 95
+            },
+            {
+              id: 'w5-v5',
+              ideaNumber: 25,
+              title: 'The 5-Second Eye Contact Trick That Projects Pure Confidence #Shorts',
+              format: 'Shorts',
+              targetDuration: '0:44',
+              uploadDay: 'Sunday',
+              hook: 'When you finish making an important point, do not look away first. Hold eye contact for two seconds after you stop speaking.',
+              concept: 'Demonstrates how post-statement eye contact anchors authority and prevents vocal upspeak.',
+              thumbnailConcept: 'Extreme close-up of golden iris reflection with text "HOLD THE GAZE".',
+              predictedCTR: '14.7%',
+              viralDriver: 'Extreme Shareability',
+              shareabilityScore: 96
+            }
+          ]
+        },
+        {
+          weekNumber: 6,
+          phase: 'Sprint 6 (Ideas #26–#30): Viral Authority Pillars & 60-Day Breakout',
+          videos: [
+            {
+              id: 'w6-v1',
+              ideaNumber: 26,
+              title: 'How to Rewire Your Dopamine System in 7 Days (The Monk Reset)',
+              format: 'Long-Form',
+              targetDuration: '10:25',
+              uploadDay: 'Monday',
+              hook: 'Cheap dopamine has made hard work feel painful and stillness feel unbearable. In 7 days, we are resetting your baseline.',
+              concept: 'Actionable 7-day neuro-behavioral protocol replacing high-frequency digital spikes with deep effort-driven dopamine.',
+              thumbnailConcept: 'Brain split between neon junk icons and pure golden light beam with text "7-DAY RESET".',
+              predictedCTR: '13.7%',
+              viralDriver: 'Trending Topic',
+              shareabilityScore: 98
+            },
+            {
+              id: 'w6-v2',
+              ideaNumber: 27,
+              title: '9 Subtle Signs You Have an Intimidating Presence (And Why People Act Weird)',
+              format: 'Long-Form',
+              targetDuration: '9:45',
+              uploadDay: 'Wednesday',
+              hook: 'If strangers either stare at you intensely or avoid your eyes completely, it is rarely because you did something wrong.',
+              concept: 'Explores the psychology of grounded presence—why self-contained people trigger projection in insecure observers.',
+              thumbnailConcept: 'Lone wolf silhouette with golden eyes standing calm in crowd blur with text "TOO INTENSE?".',
+              predictedCTR: '14.1%',
+              viralDriver: 'Trending Topic',
+              shareabilityScore: 97
+            },
+            {
+              id: 'w6-v3',
+              ideaNumber: 28,
+              title: 'Epictetus: How to Never Be Offended by Anyone Again #Shorts',
+              format: 'Shorts',
+              targetDuration: '0:53',
+              uploadDay: 'Thursday',
+              hook: 'Born a crippled slave in Rome, Epictetus discovered a mental secret that even emperors could not break.',
+              concept: 'Illustrates Epictetus\' Enchiridion Verse 20: an insult only becomes an injury the moment your mind agrees with it.',
+              thumbnailConcept: 'Broken iron chains falling off marble wrists with text "UNBREAKABLE".',
+              predictedCTR: '15.0%',
+              viralDriver: 'Extreme Shareability',
+              shareabilityScore: 98
+            },
+            {
+              id: 'w6-v4',
+              ideaNumber: 29,
+              title: 'The Solitude Advantage: Why Your Greatest Growth Happens Alone',
+              format: 'Long-Form',
+              targetDuration: '11:30',
+              uploadDay: 'Friday',
+              hook: 'Society treats loneliness like a disease so you never discover how powerful you become when you no longer need validation.',
+              concept: 'Examines historical polymaths, philosophers, and strategists who used deliberate solitude to build original thought and emotional sovereignty.',
+              thumbnailConcept: 'Classical philosopher standing on cliff edge above golden sea of clouds with text "ALONE = POWER".',
+              predictedCTR: '13.2%',
+              viralDriver: 'High Audience Demand',
+              shareabilityScore: 96
+            },
+            {
+              id: 'w6-v5',
+              ideaNumber: 30,
+              title: '12 Stoic Laws That Will Change How You See Everything (60-Minute Masterclass)',
+              format: 'Long-Form',
+              targetDuration: '24:00',
+              uploadDay: 'Sunday',
+              hook: 'For two thousand years, kings, generals, and survivors have returned to twelve core laws when the world around them collapsed.',
+              concept: 'Flagship compilation & deep-dive masterclass designed to maximize session watch-time and push the channel past the 4,000 watch-hour monetization threshold.',
+              thumbnailConcept: 'Pantheon of 3 golden Roman busts (Marcus, Seneca, Epictetus) with text "12 STOIC LAWS".',
+              predictedCTR: '14.9%',
+              viralDriver: 'High Audience Demand',
+              shareabilityScore: 99
+            }
+          ]
+        }
+      ]
+    };
 
     if (!ai) {
-      return res.json({
-        strategy: 'The 60-Day Momentum Ladder: 2 Long-form cornerstone videos per week + 3 YouTube Shorts for algorithmic cross-pollination.',
-        targetAudience: 'Ambitious 18-35 year-old professionals, students, and self-improvers seeking emotional resilience and competitive mental advantages.',
-        weeks: [
-          {
-            weekNumber: 1,
-            phase: 'Algorithmic Seeding & Core Proof',
-            videos: [
-              {
-                id: 'w1-v1',
-                title: '7 Psychological Habits That Make You Unfazed by Disrespect',
-                format: 'Long-Form',
-                targetDuration: '9:40',
-                uploadDay: 'Tuesday',
-                hook: 'Open with a scene of public confrontation and the 3-second biological freeze rule.',
-                thumbnailConcept: 'Split screen: Cluttered agitated brain vs calm marble statue with gold eye glow.',
-                predictedCTR: '11.8%'
-              },
-              {
-                id: 'w1-v2',
-                title: 'The Dark Psychology of Quiet People (Why Everyone FEARS Them)',
-                format: 'Long-Form',
-                targetDuration: '10:15',
-                uploadDay: 'Friday',
-                hook: 'Why high-status individuals speak 40% slower than the average person.',
-                thumbnailConcept: 'Silhouette in shadow with intense amber rim light and bold text "DO NOT TALK".',
-                predictedCTR: '13.4%'
-              },
-              {
-                id: 'w1-s1',
-                title: 'Never React Instantly: The Marcus Aurelius Rule #Shorts',
-                format: 'Shorts',
-                targetDuration: '0:48',
-                uploadDay: 'Wednesday',
-                hook: 'If someone insults you, say this one sentence and walk away.',
-                thumbnailConcept: 'Statue face zoomed in with red alert border.',
-                predictedCTR: '15.0%'
-              }
-            ]
-          },
-          {
-            weekNumber: 2,
-            phase: 'Curiosity Loops & Contrarian Takes',
-            videos: [
-              {
-                id: 'w2-v1',
-                title: 'Why 99% of People Fail Stoicism (The Comfort Trap Exposed)',
-                format: 'Long-Form',
-                targetDuration: '8:55',
-                uploadDay: 'Tuesday',
-                hook: 'You read Meditations and still got angry yesterday. Heres the missing neurological step.',
-                thumbnailConcept: 'Broken classical pillar with red X mark and text "THE BIG LIE".',
-                predictedCTR: '10.9%'
-              },
-              {
-                id: 'w2-v2',
-                title: 'How to Disappear for 6 Months and Return UNRECOGNIZABLE',
-                format: 'Long-Form',
-                targetDuration: '11:20',
-                uploadDay: 'Friday',
-                hook: 'The solitary monk protocol used by Silicon Valley founders and ancient generals.',
-                thumbnailConcept: 'Man walking into foggy obsidian mountain with glowing pathway.',
-                predictedCTR: '14.2%'
-              }
-            ]
-          },
-          {
-            weekNumber: 3,
-            phase: 'High-Retention Deep Dives',
-            videos: [
-              {
-                id: 'w3-v1',
-                title: 'The Art of Not Caring: How to Turn Off Anxiety in 60 Seconds',
-                format: 'Long-Form',
-                targetDuration: '9:10',
-                uploadDay: 'Tuesday',
-                hook: 'The physiological sigh combined with Epictetus dichotomy of control.',
-                thumbnailConcept: 'Glowing brain diagram highlighting amygdala shutdown.',
-                predictedCTR: '12.5%'
-              },
-              {
-                id: 'w3-v2',
-                title: '5 Warning Signs Someone Is Silently Manipulating You',
-                format: 'Long-Form',
-                targetDuration: '10:45',
-                uploadDay: 'Friday',
-                hook: 'The insidious tactic called conversational shifting.',
-                thumbnailConcept: 'Puppet strings descending onto shadowed human figure.',
-                predictedCTR: '13.8%'
-              }
-            ]
-          },
-          {
-            weekNumber: 4,
-            phase: 'Binge-Watching Trigger & Series Launch',
-            videos: [
-              {
-                id: 'w4-v1',
-                title: 'The Law of Detachment: Why Needing Nothing Gives You Everything',
-                format: 'Long-Form',
-                targetDuration: '10:30',
-                uploadDay: 'Tuesday',
-                hook: 'The paradox of pursuit: why chasing approval repels it.',
-                thumbnailConcept: 'Open empty hand catching starlight with text "LET GO".',
-                predictedCTR: '11.5%'
-              },
-              {
-                id: 'w4-v2',
-                title: '10 Rules of Power The 1% Teach Their Children (Never in School)',
-                format: 'Long-Form',
-                targetDuration: '12:40',
-                uploadDay: 'Friday',
-                hook: 'Rule number one: Information asymmetry is the only real currency.',
-                thumbnailConcept: 'Gold vault door cracked open revealing intense warm glow.',
-                predictedCTR: '15.1%'
-              }
-            ]
-          }
-        ]
-      });
+      return res.json(defaultPlan);
     }
+
+    const masterPrompt = `Act as a YouTube content strategist. Generate 30 high-potential video ideas for my [${niche}] channel ("${channel}") targeting [${audience}]. For each idea, provide a clickable title, a strong opening hook, the video concept, and a thumbnail idea. Focus on trending topics, audience demand, and shareability. Organize the 30 ideas across 6 weekly sprints (5 video ideas per week, numbered ideaNumber 1 through 30).`;
 
     const response = await ai.models.generateContent({
       model: 'gemini-3.8-flash',
-      contents: `Create a comprehensive 60-day viral content roadmap for the YouTube channel "${channel}" in the niche "${niche}". Include 4 core phase weeks with at least 8 long-form videos and 4 viral shorts, structured with curiosity gap titles, hooks, estimated durations, upload days, and thumbnail angles.`,
+      contents: masterPrompt,
       config: {
-        systemInstruction: 'You are an algorithmic YouTube strategist. Design high-retention, high-CTR content plans engineered for zero-subscriber takeoff.',
+        systemInstruction: 'You are a world-class YouTube content strategist. Execute the user prompt completely: generate 30 high-potential viral video ideas organized into 6 weekly sprints (5 ideas per week = 30 ideas total, numbered 1 to 30). Every single idea must include a clickable title, a strong opening hook, the detailed video concept, a high-contrast thumbnail idea, viralDriver ("Trending Topic", "High Audience Demand", or "Extreme Shareability"), and shareabilityScore (88-99).',
         responseMimeType: 'application/json',
         responseSchema: {
           type: Type.OBJECT,
@@ -700,15 +1049,32 @@ app.post('/api/youtube/generate-content-plan', async (req: Request, res: Respons
                       type: Type.OBJECT,
                       properties: {
                         id: { type: Type.STRING },
+                        ideaNumber: { type: Type.INTEGER },
                         title: { type: Type.STRING },
                         format: { type: Type.STRING },
                         targetDuration: { type: Type.STRING },
                         uploadDay: { type: Type.STRING },
                         hook: { type: Type.STRING },
+                        concept: { type: Type.STRING },
                         thumbnailConcept: { type: Type.STRING },
-                        predictedCTR: { type: Type.STRING }
+                        predictedCTR: { type: Type.STRING },
+                        viralDriver: { type: Type.STRING },
+                        shareabilityScore: { type: Type.INTEGER }
                       },
-                      required: ['id', 'title', 'format', 'targetDuration', 'uploadDay', 'hook', 'thumbnailConcept', 'predictedCTR']
+                      required: [
+                        'id',
+                        'ideaNumber',
+                        'title',
+                        'format',
+                        'targetDuration',
+                        'uploadDay',
+                        'hook',
+                        'concept',
+                        'thumbnailConcept',
+                        'predictedCTR',
+                        'viralDriver',
+                        'shareabilityScore'
+                      ]
                     }
                   }
                 },
@@ -722,7 +1088,10 @@ app.post('/api/youtube/generate-content-plan', async (req: Request, res: Respons
     });
 
     const parsed = JSON.parse(response.text || '{}');
-    return res.json(parsed);
+    if (parsed.weeks && parsed.weeks.length > 0) {
+      return res.json(parsed);
+    }
+    return res.json(defaultPlan);
   } catch (error: any) {
     console.error('Error generating content plan:', error);
     return res.status(500).json({ error: error.message });

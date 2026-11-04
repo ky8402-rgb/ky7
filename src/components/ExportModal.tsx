@@ -84,16 +84,17 @@ ${(branding.setupChecklist || []).map(item => `- [${item.completed ? 'x' : ' '}]
 
 ---
 
-## 3. 60-DAY VIRAL CONTENT ROADMAP
+## 3. 30 HIGH-POTENTIAL VIRAL VIDEO IDEAS
 **Strategy:** ${contentPlan.strategy}
-**Target Persona:** ${contentPlan.targetAudience}
+**Target Audience ([AUDIENCE]):** ${contentPlan.targetAudience}
 
 ${contentPlan.weeks.map(week => `
 ### Week ${week.weekNumber}: ${week.phase}
-${week.videos.map(v => `- **[${v.format} - ${v.targetDuration}] ${v.title}**
-  - Hook: "${v.hook}"
-  - Thumbnail Angle: ${v.thumbnailConcept}
-  - Upload Day: ${v.uploadDay} | Est. CTR: ${v.predictedCTR}
+${week.videos.map((v, idx) => `- **Idea #${v.ideaNumber ?? idx + 1}: [${v.format} - ${v.targetDuration}] ${v.title}** (${v.viralDriver || 'High Audience Demand'} | Shareability: ${v.shareabilityScore ?? 95}/100)
+  - **Opening Hook:** "${v.hook}"
+  - **Video Concept:** ${v.concept || 'High-retention psychological narrative.'}
+  - **Thumbnail Idea:** ${v.thumbnailConcept}
+  - **Upload Day:** ${v.uploadDay} | **Est. CTR:** ${v.predictedCTR}
 `).join('')}
 `).join('\n')}
 

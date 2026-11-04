@@ -68,13 +68,17 @@ export interface ChannelBranding {
 
 export interface VideoTopic {
   id: string;
+  ideaNumber?: number;
   title: string;
   format: 'Long-Form' | 'Shorts' | string;
   targetDuration: string;
   uploadDay: string;
   hook: string;
+  concept?: string;
   thumbnailConcept: string;
   predictedCTR: string;
+  viralDriver?: 'Trending Topic' | 'High Audience Demand' | 'Extreme Shareability' | string;
+  shareabilityScore?: number;
 }
 
 export interface RoadmapWeek {
