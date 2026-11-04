@@ -2043,16 +2043,28 @@ app.get('/api/health', (req: Request, res: Response) => {
 // Vite Dev Server / Static Production Serve
 // ----------------------------------------------------
 async function startServer() {
+  const httpServer = app.listen(port, '0.0.0.0', () => {
+    console.log(`ChannelForge server running on http://0.0.0.0:${port}`);
+  });
+
   if (process.env.NODE_ENV !== 'production') {
     let viteMiddleware: any = null;
     const viteReady = createViteServer({
       server: {
         middlewareMode: true,
-        hmr: process.env.DISABLE_HMR !== 'true',
+        hmr:
+          process.env.DISABLE_HMR === 'true'
+            ? false
+            : {
+                server: httpServer,
+              },
+        ws: {
+          server: httpServer,
+        },
         watch: process.env.DISABLE_HMR === 'true' ? null : {},
       },
       appType: 'spa',
-    }).then((vite) => {
+    } as any).then((vite) => {
       viteMiddleware = vite.middlewares;
       return vite;
     });
@@ -2069,10 +2081,6 @@ async function startServer() {
       res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
     });
   }
-
-  app.listen(port, '0.0.0.0', () => {
-    console.log(`ChannelForge server running on http://0.0.0.0:${port}`);
-  });
 }
 
 startServer().catch((err) => {
