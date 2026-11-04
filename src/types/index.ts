@@ -23,12 +23,29 @@ export interface ChannelNameOption {
   rationale: string;
 }
 
+export interface BrandingIdeaItem {
+  title: string;
+  category: string;
+  description: string;
+}
+
+export interface SetupChecklistItem {
+  id: string;
+  category: string;
+  task: string;
+  whyItMatters: string;
+  completed: boolean;
+}
+
 export interface ChannelBranding {
   channelNames: ChannelNameOption[];
   selectedNameIndex: number;
   tagline: string;
   valueProposition: string;
   aboutBio: string;
+  channelKeywords: string[];
+  brandingIdeas: BrandingIdeaItem[];
+  setupChecklist: SetupChecklistItem[];
   colorPalette: {
     primary: string;
     accent: string;

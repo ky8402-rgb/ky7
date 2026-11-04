@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, ExternalLink, Sparkles, CheckCircle2 } from 'lucide-react';
+import { X, Sparkles, CheckCircle2 } from 'lucide-react';
 
 interface BlueprintModalProps {
   isOpen: boolean;
@@ -12,7 +12,7 @@ export const BlueprintModal: React.FC<BlueprintModalProps> = ({ isOpen, onClose 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
       <div 
-        className="w-full max-w-3xl bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+        className="w-full max-w-4xl bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
@@ -20,7 +20,7 @@ export const BlueprintModal: React.FC<BlueprintModalProps> = ({ isOpen, onClose 
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-red-500" />
             <h3 className="font-extrabold text-white text-base">
-              Original Blueprint Reference (Uploaded Attachment)
+              Original Blueprint Reference Library (Uploaded Prompts #1 & #2)
             </h3>
           </div>
           <button
@@ -33,64 +33,80 @@ export const BlueprintModal: React.FC<BlueprintModalProps> = ({ isOpen, onClose 
 
         {/* Modal Content */}
         <div className="p-5 sm:p-6 overflow-y-auto space-y-6">
-          <div className="flex flex-col md:flex-row gap-6 items-start">
-            {/* Embedded User Image */}
-            <div className="w-full md:w-1/2 rounded-xl overflow-hidden border border-zinc-800 bg-black shadow-lg shrink-0">
-              <img
-                src="/assets/aistudio/IMG_20261104_075058_3a5f11dd.jpg"
-                alt="Original Uploaded Reference Blueprint"
-                className="w-full h-auto object-contain"
-              />
-              <div className="p-2.5 bg-zinc-900 text-[11px] text-zinc-400 text-center border-t border-zinc-800">
-                Uploaded reference: <code>IMG_20261104_075058_3a5f11dd.jpg</code>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Blueprint #1 */}
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 space-y-3 flex flex-col">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-red-500/15 text-red-400 border border-red-500/30">
+                  Blueprint Step #1
+                </span>
+                <span className="text-[11px] text-zinc-400 font-mono">1. FIND A PROFITABLE NICHE</span>
+              </div>
+              <div className="rounded-lg overflow-hidden border border-zinc-800 bg-black">
+                <img
+                  src="/assets/aistudio/IMG_20261104_075058_3a5f11dd.jpg"
+                  alt="Blueprint 1: Find a Profitable Niche"
+                  className="w-full h-44 object-contain"
+                />
+              </div>
+              <div className="p-3 rounded-lg bg-zinc-950 border border-zinc-800 font-mono text-xs text-zinc-200 leading-relaxed flex-1">
+                "Act as a YouTube growth strategist. Find 10 profitable faceless YouTube niches I can start with zero subscribers, no budget, no camera, and no voice recording. Analyze demand, competition, viral potential, and monetization opportunities. Rank the top 3 niches and recommend the best one for my first 60 days."
               </div>
             </div>
 
-            {/* Transcription & Framework Details */}
-            <div className="w-full md:w-1/2 space-y-4 text-xs">
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-red-400">
-                  Transcribed Master Prompt:
+            {/* Blueprint #2 */}
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 space-y-3 flex flex-col">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                  Blueprint Step #2
                 </span>
-                <div className="mt-1.5 p-3 rounded-xl bg-zinc-900 border border-zinc-800 font-mono text-zinc-200 leading-relaxed">
-                  "Act as a YouTube growth strategist. Find 10 profitable faceless YouTube niches I can start with zero subscribers, no budget, no camera, and no voice recording. Analyze demand, competition, viral potential, and monetization opportunities. Rank the top 3 niches and recommend the best one for my first 60 days."
-                </div>
+                <span className="text-[11px] text-zinc-400 font-mono">2. BUILD MY CHANNEL FROM SCRATCH</span>
               </div>
+              <div className="rounded-lg overflow-hidden border border-zinc-800 bg-black">
+                <img
+                  src="/assets/aistudio/IMG_20261104_075044_0cd80a5c.jpg"
+                  alt="Blueprint 2: Build My Channel From Scratch"
+                  className="w-full h-44 object-contain"
+                />
+              </div>
+              <div className="p-3 rounded-lg bg-zinc-950 border border-zinc-800 font-mono text-xs text-zinc-200 leading-relaxed flex-1">
+                "Act as a YouTube branding expert. Help me build a professional faceless YouTube channel in the [NICHE] niche. Generate channel names, an SEO-friendly description, branding ideas, channel keywords, and a complete setup checklist to stand out from competitors."
+              </div>
+            </div>
+          </div>
 
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block mb-2">
-                  Full 8-Step Launch Roadmap Executed by this Studio:
-                </span>
-                <ol className="space-y-1.5 text-zinc-300">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    <span><strong>1. Find a Profitable Niche</strong> (Evaluated 10 niches)</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    <span><strong>2. Branding & Bio</strong> (Names, Banner safe zones)</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    <span><strong>3. 60-Day Content Plan</strong> (Curiosity titles & cadence)</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    <span><strong>4. Faceless Script Studio</strong> (TTS reader & visual cues)</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    <span><strong>5. Thumbnail & Title Lab</strong> (Contrast & Feed simulator)</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    <span><strong>6. SEO & Publishing Kit</strong> (Tags, Chapters, Pinned comment)</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    <span><strong>7. Monetization Engine</strong> (AdSense + Affiliate calculator)</span>
-                  </li>
-                </ol>
+          <div className="p-4 rounded-xl bg-zinc-900/70 border border-zinc-800 text-xs">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block mb-2.5">
+              Complete 7-Step Launch Roadmap Executed by ChannelForge Studio:
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-zinc-300">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <span><strong>1. Find a Profitable Niche</strong> (10 niches ranked + 60-day pick)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <span><strong>2. Build Channel From Scratch</strong> (Names, SEO Bio, Keywords, Checklist)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <span><strong>3. 60-Day Content Plan</strong> (Curiosity titles & weekly schedule)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <span><strong>4. Faceless Script Studio</strong> (TTS teleprompter & visual cues)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <span><strong>5. Thumbnail & Title Lab</strong> (Contrast & dark-mode simulator)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <span><strong>6. SEO & Publishing Kit</strong> (Tags, timestamps, pinned comment)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <span><strong>7. Monetization Engine</strong> (AdSense + Affiliate revenue calculator)</span>
               </div>
             </div>
           </div>

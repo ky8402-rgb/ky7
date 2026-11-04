@@ -6,6 +6,8 @@ import {
   formatYouTubeTags,
   generateVideoChapters,
   validateYouTubeHandle,
+  formatChannelKeywords,
+  calculateChecklistProgress,
 } from './youtube-logic.js';
 
 test('calculateChannelRevenue calculates AdSense, Affiliate, and Sponsor revenue accurately', () => {
@@ -22,8 +24,8 @@ test('calculateChannelRevenue calculates AdSense, Affiliate, and Sponsor revenue
   // adSenseRevenue: (100000 / 1000) * 6.6 = 660
   assert.equal(result.adSenseRevenue, 660);
 
-  // Link clicks: 100000 * 0.01 = 1000 clicks
-  // Conversions: 1000 * 0.02 = 20 purchases
+  // Link clicks: 100000 * 1.0% = 1000 clicks
+  // Conversions: 1000 * 2.0% = 20 purchases
   // Affiliate revenue: 20 * 25 = 500
   assert.equal(result.affiliateRevenue, 500);
 
@@ -72,3 +74,24 @@ test('validateYouTubeHandle handles @ and character rules correctly', () => {
   assert.equal(validateYouTubeHandle('ab').valid, false); // too short
   assert.equal(validateYouTubeHandle('invalid name with spaces!').valid, false);
 });
+
+test('formatChannelKeywords formats channel keywords and enforces 500 char limit', () => {
+  const res = formatChannelKeywords(['stoicism', ' dark psychology ', 'emotional mastery', '']);
+  assert.equal(res.commaSeparated, 'stoicism, dark psychology, emotional mastery');
+  assert.equal(res.keywordCount, 3);
+  assert.equal(res.withinLimit, true);
+});
+
+test('calculateChecklistProgress computes accurate completion percentage', () => {
+  const items = [
+    { completed: true },
+    { completed: true },
+    { completed: false },
+    { completed: false },
+  ];
+  const stats = calculateChecklistProgress(items);
+  assert.equal(stats.completedCount, 2);
+  assert.equal(stats.totalCount, 4);
+  assert.equal(stats.percentage, 50);
+});
+

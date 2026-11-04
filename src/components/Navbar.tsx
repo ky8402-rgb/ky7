@@ -22,7 +22,7 @@ interface NavbarProps {
 
 const STEPS = [
   { id: 1, label: '1. Niche Matrix', icon: Compass, short: 'Niche' },
-  { id: 2, label: '2. Branding & Bio', icon: Sparkles, short: 'Branding' },
+  { id: 2, label: '2. Build Channel', icon: Sparkles, short: 'Build Channel' },
   { id: 3, label: '3. 60-Day Roadmap', icon: Calendar, short: 'Roadmap' },
   { id: 4, label: '4. Script Studio', icon: FileText, short: 'Script' },
   { id: 5, label: '5. Thumbnail & CTR', icon: ImageIcon, short: 'Thumbnail' },

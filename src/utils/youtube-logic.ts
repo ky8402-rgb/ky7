@@ -184,3 +184,46 @@ export function validateYouTubeHandle(handle: string): { valid: boolean; formatt
     message: 'Valid YouTube handle available.',
   };
 }
+
+/**
+ * Formats YouTube Channel Keywords (YouTube Studio > Settings > Channel > Basic Info)
+ * Enforces YouTube's 500-character limit and returns character count metadata.
+ */
+export function formatChannelKeywords(keywords: string[]): {
+  commaSeparated: string;
+  charCount: number;
+  withinLimit: boolean;
+  keywordCount: number;
+} {
+  const cleaned = keywords.map(k => k.trim()).filter(Boolean);
+  const commaSeparated = cleaned.join(', ');
+  const charCount = commaSeparated.length;
+  return {
+    commaSeparated,
+    charCount,
+    withinLimit: charCount <= 500,
+    keywordCount: cleaned.length,
+  };
+}
+
+/**
+ * Calculates channel setup checklist completion statistics
+ */
+export function calculateChecklistProgress(items: { completed: boolean }[]): {
+  completedCount: number;
+  totalCount: number;
+  percentage: number;
+} {
+  const totalCount = items.length;
+  if (totalCount === 0) {
+    return { completedCount: 0, totalCount: 0, percentage: 0 };
+  }
+  const completedCount = items.filter(i => i.completed).length;
+  const percentage = Math.round((completedCount / totalCount) * 100);
+  return {
+    completedCount,
+    totalCount,
+    percentage,
+  };
+}
+

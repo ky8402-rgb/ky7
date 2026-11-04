@@ -292,53 +292,145 @@ app.post('/api/youtube/find-niches', async (req: Request, res: Response) => {
 });
 
 // ----------------------------------------------------
-// API Route 2: Generate Channel Branding (Step 2)
+// API Route 2: Build My Channel From Scratch (Step 2 from user blueprint)
 // ----------------------------------------------------
 app.post('/api/youtube/generate-branding', async (req: Request, res: Response) => {
   try {
     const { nicheName, category, targetVibe } = req.body;
     const niche = nicheName || 'Stoic Life Psychology & Dark Mindset Lessons';
 
-    if (!ai) {
-      return res.json({
-        branding: {
-          channelNames: [
-            { name: 'Mindset Vault', handle: '@MindsetVaultHQ', rationale: 'Authoritative, memorable, and evokes protected deep secrets.' },
-            { name: 'Stoic Odyssey', handle: '@StoicOdysseyOfficial', rationale: 'Evokes a transformative heroic journey of the mind.' },
-            { name: 'Iron Will Philosophy', handle: '@IronWillWisdom', rationale: 'Strong, impactful keyword with high search volume.' },
-            { name: 'The Silent Thinker', handle: '@TheSilentThinkerTV', rationale: 'Mysterious and intriguing for faceless commentary.' },
-            { name: 'Apex Mentality', handle: '@ApexMentalityAI', rationale: 'Positioned for high-performance self-mastery.' }
-          ],
-          tagline: 'Master Your Mind Before The World Masters You.',
-          valueProposition: 'Unlocking ancient psychological frameworks and stoic mental models to build unshakable discipline, emotional control, and quiet power in under 10 minutes a day.',
-          aboutBio: 'Welcome to Mindset Vault — your premier archive for timeless stoic philosophy, dark psychology breakdowns, and deep mindset reprogramming. We deconstruct the cognitive secrets of history\'s most resilient figures into actionable, high-retention visual lessons. \n\n🎯 Upload Schedule: New deep dive every Tuesday & Friday at 2 PM EST.\n💼 Business & Sponsorship Inquiries: contact@mindsetvault.com\n\nSubscribe to fortify your mind and join our community of over 50,000 disciplined thinkers.',
-          colorPalette: {
-            primary: '#0F172A', // Slate 900
-            accent: '#EAB308',  // Yellow 500 Gold
-            background: '#020617', // Slate 950
-            card: '#1E293B',    // Slate 800
-            text: '#F8FAFC',
-            mood: 'Dark Cinematic & Regal Gold'
-          },
-          bannerConcept: {
-            headlineText: 'BUILD AN UNSHAKABLE MIND',
-            subText: 'Ancient Philosophy • Modern Psychology • Daily Discipline',
-            uploadBadgeText: 'NEW VIDEOS EVERY TUESDAY & FRIDAY',
-            visualDescription: 'Dark textured marble background with a golden cracked Roman bust of Marcus Aurelius on the right side, dramatic rim lighting in gold, clean bold typography in center safe zone.'
-          },
-          avatarConcept: {
-            description: 'Minimalist golden Spartan/Roman helmet silhouette on a deep obsidian black circular background with a subtle ambient gold rim glow.',
-            lettermark: 'MV'
-          }
+    const defaultBranding = {
+      channelNames: [
+        { name: 'Mindset Vault', handle: '@MindsetVaultHQ', rationale: 'Authoritative, memorable, and evokes protected deep psychological secrets.' },
+        { name: 'Stoic Odyssey', handle: '@StoicOdysseyOfficial', rationale: 'Evokes a transformative heroic journey of the mind.' },
+        { name: 'Iron Will Philosophy', handle: '@IronWillWisdom', rationale: 'Strong, impactful keyword with high search volume.' },
+        { name: 'The Silent Thinker', handle: '@TheSilentThinkerTV', rationale: 'Mysterious and intriguing for faceless commentary.' },
+        { name: 'Apex Mentality', handle: '@ApexMentalityAI', rationale: 'Positioned for high-performance self-mastery.' }
+      ],
+      tagline: 'Master Your Mind Before The World Masters You.',
+      valueProposition: 'Unlocking ancient psychological frameworks and stoic mental models to build unshakable discipline, emotional control, and quiet power in under 10 minutes a day.',
+      aboutBio: 'Welcome to Mindset Vault — your premier archive for timeless stoic philosophy, dark psychology breakdowns, and deep mindset reprogramming. We deconstruct the cognitive secrets of history\'s most resilient figures into actionable, high-retention visual lessons. \n\n🎯 Upload Schedule: New deep dive every Tuesday & Friday at 2 PM EST.\n💼 Business & Sponsorship Inquiries: contact@mindsetvault.com\n\nSubscribe to fortify your mind and join our community of over 50,000 disciplined thinkers.',
+      channelKeywords: [
+        'stoicism',
+        'stoic philosophy',
+        'dark psychology',
+        'emotional mastery',
+        'mental toughness',
+        'marcus aurelius meditations',
+        'epictetus wisdom',
+        'self discipline habits',
+        'how to control emotions',
+        'psychological tricks',
+        'mindset reprogramming',
+        'silent power',
+        'unshakable confidence',
+        'ancient wisdom modern life',
+        'faceless philosophy channel'
+      ],
+      brandingIdeas: [
+        {
+          title: 'Chiaroscuro Marble & Gold Visual Signature',
+          category: 'Visual Motif',
+          description: 'Use high-contrast obsidian backgrounds with warm golden rim-lighting on classical Roman/Greek busts so viewers recognize your videos in the feed before reading thechannel name.'
+        },
+        {
+          title: 'Calm Baritone Authority Narration',
+          category: 'Voice Persona',
+          description: 'Pair a deep, measured baritone TTS voice at 1.05x speed with subtle room reverb and a 40Hz sub-bass drone during hook questions to create immediate psychological gravity.'
+        },
+        {
+          title: '2-Word High-Contrast Yellow/White Thumbnail Rule',
+          category: 'Thumbnail Identity',
+          description: 'Never exceed 2-3 words on thumbnails. Place bold uppercase sans-serif text on the left third with a single focal statue or silhouette on the right third.'
+        },
+        {
+          title: 'The "3-Second Biological Freeze" Cold Open',
+          category: 'Competitor Differentiation',
+          description: 'Eliminate channel intro logos completely. Start every video with a visceral real-world conflict scenario and a neurological or historical twist within the first 5 seconds.'
         }
-      });
+      ],
+      setupChecklist: [
+        {
+          id: 'chk-1',
+          category: 'Account & Security',
+          task: 'Create a dedicated Brand Account & enable 2-Step Verification + Intermediate/Advanced YouTube Features via phone verification',
+          whyItMatters: 'Unlocks custom thumbnails, vídeos longer than 15 minutes, external links in descriptions, and higher daily upload limits immediately.',
+          completed: true
+        },
+        {
+          id: 'chk-2',
+          category: 'Visual Identity',
+          task: 'Upload 800x800px high-contrast Avatar & 2560x1440px Banner keeping all text inside the 1546x423px mobile safe zone',
+          whyItMatters: '72% of faceless channel traffic is on mobile; cropped banners immediately signal an amateur channel and lower subscriber conversion.',
+          completed: true
+        },
+        {
+          id: 'chk-3',
+          category: 'SEO & Discovery',
+          task: 'Paste your 15 targeted Channel Keywords into YouTube Studio > Settings > Channel > Basic Info & set Channel Country to Tier-1 (US/UK)',
+          whyItMatters: 'Trains YouTube\'s initial recommendation classifier on who your ideal viewer is before you even have watch-history data.',
+          completed: false
+        },
+        {
+          id: 'chk-4',
+          category: 'SEO & Discovery',
+          task: 'Publish your keyword-rich "About" Description with upload schedule in the first 150 characters + business inquiry email',
+          whyItMatters: 'YouTube & Google index the first 150 characters as your channel meta description, while sponsors filter channels by visible contact emails.',
+          completed: false
+        },
+        {
+          id: 'chk-5',
+          category: 'Conversion & Layout',
+          task: 'Configure a 150x150px transparent "Subscribe" Branding Watermark set to display across the "Entire Video"',
+          whyItMatters: 'Adds a persistent 1-click subscribe button on desktop fullscreen views, boosting passive subscriber conversion by 8-14%.',
+          completed: false
+        },
+        {
+          id: 'chk-6',
+          category: 'Upload Defaults',
+          task: 'Set YouTube Studio Upload Defaults: Category ("Education" or "People & Blogs"), Video Language (English), Comments ("Hold potentially inappropriate")',
+          whyItMatters: 'Saves 10 minutes per upload and ensures consistent algorithmic categorization across every video.',
+          completed: false
+        },
+        {
+          id: 'chk-7',
+          category: 'Competitor Edge',
+          task: 'Create 3 themed Playlists ("Stoic Mental Armor", "Dark Psychology Decoded", "Silent Discipline") and feature them on the Channel Home tab',
+          whyItMatters: 'Turns single-video viewers into multi-video binge sessions—the #1 signal YouTube uses to push small channels to the Browse page.',
+          completed: false
+        }
+      ],
+      colorPalette: {
+        primary: '#0F172A', // Slate 900
+        accent: '#EAB308',  // Yellow 500 Gold
+        background: '#020617', // Slate 950
+        card: '#1E293B',    // Slate 800
+        text: '#F8FAFC',
+        mood: 'Dark Cinematic & Regal Gold'
+      },
+      bannerConcept: {
+        headlineText: 'BUILD AN UNSHAKABLE MIND',
+        subText: 'Ancient Philosophy • Modern Psychology • Daily Discipline',
+        uploadBadgeText: 'NEW VIDEOS EVERY TUESDAY & FRIDAY',
+        visualDescription: 'Dark textured marble background with a golden cracked Roman bust of Marcus Aurelius on the right side, dramatic rim lighting in gold, clean bold typography in center safe zone.'
+      },
+      avatarConcept: {
+        description: 'Minimalist golden Spartan/Roman helmet silhouette on a deep obsidian black circular background with a subtle ambient gold rim glow.',
+        lettermark: 'MV'
+      }
+    };
+
+    if (!ai) {
+      return res.json({ branding: defaultBranding });
     }
+
+    const masterPrompt = `Act as a YouTube branding expert. Help me build a professional faceless YouTube channel in the [${niche}] niche (Category: ${category || 'General'}, Aesthetic: ${targetVibe || 'Cinematic, authoritative, high-conversion'}). Generate channel names, an SEO-friendly description, branding ideas, channel keywords, and a complete setup checklist to stand out from competitors.`;
 
     const response = await ai.models.generateContent({
       model: 'gemini-3.8-flash',
-      contents: `Generate complete YouTube Channel Branding for a faceless channel in the niche: "${niche}", Category: "${category || 'General'}". Desired aesthetic: "${targetVibe || 'Cinematic, authoritative, high-conversion'}".`,
+      contents: masterPrompt,
       config: {
-        systemInstruction: 'You are a world-class YouTube channel branding expert and visual director. Create sticky channel names with clean handles, a compelling tagline, high-SEO YouTube About page bio, cohesive color scheme, and banner/avatar visual concepts adhering strictly to YouTube desktop and mobile safe zone dimensions.',
+        systemInstruction: 'You are a world-class YouTube channel branding expert and visual director. Execute the user prompt thoroughly: generate sticky channel names with clean handles, a compelling tagline, an SEO-friendly YouTube About description, 12-15 high-intent channel keywords, 4 distinctive branding ideas to stand out from competitors, a 7-step actionable channel setup checklist, cohesive color scheme, and banner/avatar visual concepts adhering strictly to YouTube desktop and mobile safe zone dimensions.',
         responseMimeType: 'application/json',
         responseSchema: {
           type: Type.OBJECT,
@@ -361,6 +453,36 @@ app.post('/api/youtube/generate-branding', async (req: Request, res: Response) =
                 tagline: { type: Type.STRING },
                 valueProposition: { type: Type.STRING },
                 aboutBio: { type: Type.STRING },
+                channelKeywords: {
+                  type: Type.ARRAY,
+                  items: { type: Type.STRING }
+                },
+                brandingIdeas: {
+                  type: Type.ARRAY,
+                  items: {
+                    type: Type.OBJECT,
+                    properties: {
+                      title: { type: Type.STRING },
+                      category: { type: Type.STRING },
+                      description: { type: Type.STRING }
+                    },
+                    required: ['title', 'category', 'description']
+                  }
+                },
+                setupChecklist: {
+                  type: Type.ARRAY,
+                  items: {
+                    type: Type.OBJECT,
+                    properties: {
+                      id: { type: Type.STRING },
+                      category: { type: Type.STRING },
+                      task: { type: Type.STRING },
+                      whyItMatters: { type: Type.STRING },
+                      completed: { type: Type.BOOLEAN }
+                    },
+                    required: ['id', 'category', 'task', 'whyItMatters', 'completed']
+                  }
+                },
                 colorPalette: {
                   type: Type.OBJECT,
                   properties: {
@@ -392,7 +514,18 @@ app.post('/api/youtube/generate-branding', async (req: Request, res: Response) =
                   required: ['description', 'lettermark']
                 }
               },
-              required: ['channelNames', 'tagline', 'valueProposition', 'aboutBio', 'colorPalette', 'bannerConcept', 'avatarConcept']
+              required: [
+                'channelNames',
+                'tagline',
+                'valueProposition',
+                'aboutBio',
+                'channelKeywords',
+                'brandingIdeas',
+                'setupChecklist',
+                'colorPalette',
+                'bannerConcept',
+                'avatarConcept'
+              ]
             }
           },
           required: ['branding']
@@ -401,7 +534,10 @@ app.post('/api/youtube/generate-branding', async (req: Request, res: Response) =
     });
 
     const parsed = JSON.parse(response.text || '{}');
-    return res.json(parsed);
+    if (parsed.branding) {
+      return res.json(parsed);
+    }
+    return res.json({ branding: defaultBranding });
   } catch (error: any) {
     console.error('Error generating branding:', error);
     return res.status(500).json({ error: error.message });

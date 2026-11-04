@@ -221,6 +221,96 @@ const INITIAL_BRANDING: ChannelBranding = {
   tagline: 'Master Your Mind Before The World Masters You.',
   valueProposition: 'Unlocking ancient stoic frameworks and psychological mental models to build unshakable discipline, emotional control, and quiet power in under 10 minutes a day.',
   aboutBio: 'Welcome to Mindset Vault — your premier archive for timeless stoic philosophy, dark psychology breakdowns, and deep mindset reprogramming. We deconstruct the cognitive secrets of history\'s most resilient figures into actionable, high-retention visual lessons. \n\n🎯 Upload Schedule: New deep dive every Tuesday & Friday at 2 PM EST.\n💼 Business & Sponsorship Inquiries: contact@mindsetvault.com\n\nSubscribe to fortify your mind and join our community of disciplined thinkers.',
+  channelKeywords: [
+    'stoicism',
+    'stoic philosophy',
+    'dark psychology',
+    'emotional mastery',
+    'mental toughness',
+    'marcus aurelius meditations',
+    'epictetus wisdom',
+    'self discipline habits',
+    'how to control emotions',
+    'psychological tricks',
+    'mindset reprogramming',
+    'silent power',
+    'unshakable confidence',
+    'ancient wisdom modern life',
+    'faceless philosophy channel'
+  ],
+  brandingIdeas: [
+    {
+      title: 'Chiaroscuro Marble & Gold Visual Signature',
+      category: 'Visual Motif',
+      description: 'Use high-contrast obsidian backgrounds with warm golden rim-lighting on classical Roman/Greek busts so viewers recognize your videos in the feed before reading the channel name.'
+    },
+    {
+      title: 'Calm Baritone Authority Narration',
+      category: 'Voice Persona',
+      description: 'Pair a deep, measured baritone TTS voice at 1.05x speed with subtle room reverb and a 40Hz sub-bass drone during hook questions to create immediate psychological gravity.'
+    },
+    {
+      title: '2-Word High-Contrast Yellow/White Thumbnail Rule',
+      category: 'Thumbnail Identity',
+      description: 'Never exceed 2-3 words on thumbnails. Place bold uppercase sans-serif text on the left third with a single focal statue or silhouette on the right third.'
+    },
+    {
+      title: 'The "3-Second Biological Freeze" Cold Open',
+      category: 'Competitor Differentiation',
+      description: 'Eliminate channel intro logos completely. Start every video with a visceral real-world conflict scenario and a neurological or historical twist within the first 5 seconds.'
+    }
+  ],
+  setupChecklist: [
+    {
+      id: 'chk-1',
+      category: 'Account & Security',
+      task: 'Create a dedicated Brand Account & enable 2-Step Verification + Intermediate/Advanced YouTube Features via phone verification',
+      whyItMatters: 'Unlocks custom thumbnails, videos longer than 15 minutes, external links in descriptions, and higher daily upload limits immediately.',
+      completed: true
+    },
+    {
+      id: 'chk-2',
+      category: 'Visual Identity',
+      task: 'Upload 800x800px high-contrast Avatar & 2560x1440px Banner keeping all text inside the 1546x423px mobile safe zone',
+      whyItMatters: '72% of faceless channel traffic is on mobile; cropped banners immediately signal an amateur channel and lower subscriber conversion.',
+      completed: true
+    },
+    {
+      id: 'chk-3',
+      category: 'SEO & Discovery',
+      task: 'Paste your 15 targeted Channel Keywords into YouTube Studio > Settings > Channel > Basic Info & set Channel Country to Tier-1 (US/UK)',
+      whyItMatters: 'Trains YouTube\'s initial recommendation classifier on who your ideal viewer is before you even have watch-history data.',
+      completed: false
+    },
+    {
+      id: 'chk-4',
+      category: 'SEO & Discovery',
+      task: 'Publish your keyword-rich "About" Description with upload schedule in the first 150 characters + business inquiry email',
+      whyItMatters: 'YouTube & Google index the first 150 characters as your channel meta description, while sponsors filter channels by visible contact emails.',
+      completed: false
+    },
+    {
+      id: 'chk-5',
+      category: 'Conversion & Layout',
+      task: 'Configure a 150x150px transparent "Subscribe" Branding Watermark set to display across the "Entire Video"',
+      whyItMatters: 'Adds a persistent 1-click subscribe button on desktop fullscreen views, boosting passive subscriber conversion by 8-14%.',
+      completed: false
+    },
+    {
+      id: 'chk-6',
+      category: 'Upload Defaults',
+      task: 'Set YouTube Studio Upload Defaults: Category ("Education" or "People & Blogs"), Video Language (English), Comments ("Hold potentially inappropriate")',
+      whyItMatters: 'Saves 10 minutes per upload and ensures consistent algorithmic categorization across every video.',
+      completed: false
+    },
+    {
+      id: 'chk-7',
+      category: 'Competitor Edge',
+      task: 'Create 3 themed Playlists ("Stoic Mental Armor", "Dark Psychology Decoded", "Silent Discipline") and feature them on the Channel Home tab',
+      whyItMatters: 'Turns single-video viewers into multi-video binge sessions—the #1 signal YouTube uses to push small channels to the Browse page.',
+      completed: false
+    }
+  ],
   colorPalette: {
     primary: '#0F172A',
     accent: '#EAB308',
@@ -504,7 +594,7 @@ export default function App() {
     }
   };
 
-  const handleRegenerateBranding = async () => {
+  const handleRegenerateBranding = async (targetVibe?: string) => {
     setIsLoading(true);
     try {
       const res = await fetch('/api/youtube/generate-branding', {
@@ -513,11 +603,16 @@ export default function App() {
         body: JSON.stringify({
           nicheName: activeNiche.name,
           category: activeNiche.category,
+          targetVibe,
         }),
       });
       const data = await res.json();
       if (data.branding) {
-        setBranding({ ...data.branding, selectedNameIndex: 0 });
+        setBranding({
+          ...INITIAL_BRANDING,
+          ...data.branding,
+          selectedNameIndex: 0,
+        });
       }
     } catch (e) {
       console.error(e);
