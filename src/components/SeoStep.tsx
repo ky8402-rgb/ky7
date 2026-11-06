@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { SeoData, VideoScript, ContentPlan, VideoTopic } from '../types';
 import { formatYouTubeTags } from '../utils/youtube-logic';
 import {
@@ -8,12 +8,14 @@ import {
 import {
   initAuth,
   googleSignIn,
+  setManualYouTubeAccessToken,
   logout,
   getAccessToken,
   fetchConnectedYouTubeChannel,
   uploadVideoToYouTube,
   ConnectedYouTubeChannel,
   YouTubeUploadResult,
+  DEFAULT_OAUTH_CLIENT_IDS,
 } from '../services/youtubeAuth';
 import type { User } from 'firebase/auth';
 import {
@@ -41,6 +43,8 @@ import {
   Zap,
   Clock,
   Layers,
+  KeyRound,
+  Globe,
 } from 'lucide-react';
 
 interface SeoStepProps {
@@ -60,10 +64,14 @@ interface SeoStepProps {
 function getNextScheduledIsoLocal(daysAhead: number): string {
   const d = new Date();
   d.setDate(d.getDate() + daysAhead);
-  d.setHours(18, 0, 0, 0);
+  const jitterMin = 4 + ((daysAhead * 3) % 7); // Human-like schedule jitter (e.g., 18:07)
+  d.setHours(18, jitterMin, 0, 0);
   const tzOffsetMs = d.getTimezoneOffset() * 60000;
   return new Date(d.getTime() - tzOffsetMs).toISOString().slice(0, 16);
 }
+
+const OAUTH_PLAYGROUND_URL =
+  'https://developers.google.com/oauthplayground/#step1&apisSelect=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.upload%2Chttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.readonly&url=https%3A%2F%2F&content_type=application%2Fjson&http_method=GET&useDefaultOauthCred=unchecked';
 
 export const SeoStep: React.FC<SeoStepProps> = ({
   seo,
@@ -97,6 +105,7 @@ export const SeoStep: React.FC<SeoStepProps> = ({
   const [isRunningAutoPilot, setIsRunningAutoPilot] = useState(false);
   const [autoPilotStepText, setAutoPilotStepText] = useState('');
   const [showOAuthGuide, setShowOAuthGuide] = useState(false);
+  const hasAutoStartedRender = useRef(false);
 
   // YouTube OAuth & Direct Upload state
   const [needsAuth, setNeedsAuth] = useState(true);
@@ -104,6 +113,13 @@ export const SeoStep: React.FC<SeoStepProps> = ({
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [connectedChannel, setConnectedChannel] =
     useState<ConnectedYouTubeChannel | null>(null);
+  const [selectedClientId, setSelectedClientId] = useState<string>(
+    DEFAULT_OAUTH_CLIENT_IDS[0]
+  );
+  const [manualTokenInput, setManualTokenInput] = useState<string>('');
+  const [showInstantTokenBypass, setShowInstantTokenBypass] =
+    useState<boolean>(true);
+
   const [privacyStatus, setPrivacyStatus] = useState<
     'private' | 'unlisted' | 'public'
   >('private');
@@ -118,6 +134,13 @@ export const SeoStep: React.FC<SeoStepProps> = ({
   const [uploadResult, setUploadResult] = useState<YouTubeUploadResult | null>(
     null
   );
+
+  const currentHostname =
+    typeof window !== 'undefined' ? window.location.hostname : 'localhost';
+  const currentOrigin =
+    typeof window !== 'undefined'
+      ? window.location.origin
+      : 'http://localhost:3000';
 
   useEffect(() => {
     const unsubscribe = initAuth(
@@ -175,11 +198,21 @@ export const SeoStep: React.FC<SeoStepProps> = ({
     }
   };
 
-  const handleGoogleLogin = async (): Promise<string | null> => {
+  // Automatically start rendering the video in the background as soon as Step 7 opens!
+  useEffect(() => {
+    if (!hasAutoStartedRender.current && !renderedVideo && !isRenderingVideo) {
+      hasAutoStartedRender.current = true;
+      handleRenderVideo();
+    }
+  }, []);
+
+  const handleGoogleLogin = async (
+    useDirectGisClientId?: string
+  ): Promise<string | null> => {
     setIsLoggingIn(true);
     setUploadError(null);
     try {
-      const result = await googleSignIn();
+      const result = await googleSignIn(useDirectGisClientId);
       if (result) {
         setUser(result.user);
         setNeedsAuth(false);
@@ -189,13 +222,17 @@ export const SeoStep: React.FC<SeoStepProps> = ({
         } catch (chErr: any) {
           console.warn('Channel lookup warning:', chErr);
         }
+        if (renderedVideo || customVideoFile) {
+          setShowConfirmModal(true);
+        }
         return result.accessToken;
       }
       return null;
     } catch (err: any) {
+      setShowInstantTokenBypass(true);
       setUploadError(
         err?.message ||
-          'Google sign-in failed. Make sure popups are allowed for this page.'
+          'Google sign-in popup was blocked or this domain is not yet allowlisted in Firebase. Use the Instant OAuth Token Bypass box below to connect immediately on any domain!'
       );
       return null;
     } finally {
@@ -203,9 +240,36 @@ export const SeoStep: React.FC<SeoStepProps> = ({
     }
   };
 
-  // 1-Click Full Auto-Pilot Pipeline:
-  // Automatically renders the multi-scene video + AI voiceover, connects Google OAuth if needed,
-  // and opens the final confirmation modal to publish/schedule on YouTube!
+  const handleConnectManualToken = async () => {
+    setUploadError(null);
+    try {
+      const token = setManualYouTubeAccessToken(manualTokenInput);
+      setNeedsAuth(false);
+      setIsLoggingIn(true);
+      try {
+        const ch = await fetchConnectedYouTubeChannel(token);
+        setConnectedChannel(ch);
+      } catch (chErr: any) {
+        console.warn('Channel lookup note:', chErr);
+      }
+      setManualTokenInput('');
+
+      // If video is not rendered yet, render it automatically, then open the upload confirmation!
+      let videoOut = renderedVideo;
+      if (!videoOut && !customVideoFile) {
+        videoOut = await handleRenderVideo();
+      }
+      if (videoOut || customVideoFile) {
+        setShowConfirmModal(true);
+      }
+    } catch (err: any) {
+      setUploadError(err?.message || 'Invalid access token.');
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
+
+  // 1-Click Full Auto-Pilot Pipeline
   const handleRunFullAutoPilot = async (daysAheadSchedule = 1) => {
     setIsRunningAutoPilot(true);
     setUploadError(null);
@@ -224,7 +288,7 @@ export const SeoStep: React.FC<SeoStepProps> = ({
       }
 
       setAutoPilotStepText(
-        'Step 2/3: Verifying Google YouTube OAuth connection...'
+        'Step 2/3: Checking YouTube OAuth authorization...'
       );
       let token = await getAccessToken();
       if (!token) {
@@ -232,17 +296,15 @@ export const SeoStep: React.FC<SeoStepProps> = ({
       }
 
       setAutoPilotStepText(
-        'Step 3/3: Video & SEO package ready! Review confirmation dialog to publish to YouTube.'
+        'Step 3/3: Video & anti-ban SEO package ready! Confirm upload to publish to YouTube.'
       );
       if (token) {
         setShowConfirmModal(true);
-      } else {
-        setUploadError(
-          'Video is 100% rendered and ready! Click "Sign in with Google" to authorize uploading to your YouTube channel.'
-        );
       }
     } catch (err: any) {
-      setUploadError(err?.message || 'Auto-pilot pipeline encountered an error.');
+      setUploadError(
+        err?.message || 'Auto-pilot pipeline encountered an error.'
+      );
     } finally {
       setIsRunningAutoPilot(false);
     }
@@ -276,7 +338,7 @@ export const SeoStep: React.FC<SeoStepProps> = ({
     setShowConfirmModal(false);
     if (!activeVideoBlob) {
       setUploadError(
-        'Please click "Run 1-Click Full Auto-Pilot" or "Auto-Render Multi-Scene Video" first.'
+        'Please wait for the automatic video render to finish (or select an .MP4 file) first.'
       );
       return;
     }
@@ -284,7 +346,9 @@ export const SeoStep: React.FC<SeoStepProps> = ({
     const token = await getAccessToken();
     if (!token) {
       setNeedsAuth(true);
-      setUploadError('Please sign in with Google to authorize YouTube upload.');
+      setUploadError(
+        'Please connect your Google account or paste an OAuth Access Token first.'
+      );
       return;
     }
 
@@ -292,7 +356,9 @@ export const SeoStep: React.FC<SeoStepProps> = ({
     setUploadError(null);
     setUploadResult(null);
     setUploadProgress(5);
-    setUploadStage('Preparing YouTube Data API v3 upload...');
+    setUploadStage(
+      'Applying anti-ban safeguards & preparing YouTube Data API v3 upload...'
+    );
 
     try {
       const result = await uploadVideoToYouTube(token, {
@@ -332,13 +398,13 @@ export const SeoStep: React.FC<SeoStepProps> = ({
           <div className="space-y-1.5">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/15 border border-red-500/30 text-red-400 text-xs font-bold uppercase tracking-wider">
               <Zap className="w-3.5 h-3.5" />
-              Step 7 • 1-Click End-to-End YouTube Auto-Pilot
+              Step 7 • Hands-Free Auto-Pilot &amp; Anti-Ban YouTube Publisher
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
               7. Full Auto-Pilot Video Producer &amp; Direct YouTube Channel Publisher
             </h1>
             <p className="text-zinc-300 text-sm max-w-3xl">
-              Click <strong>Run 1-Click Full Auto-Pilot</strong> below to automatically synthesize the Gemini TTS voiceover, render your 1280x720 HD multi-scene video with kinetic captions, package your SEO tags &amp; chapters, and schedule/upload directly to your YouTube channel.
+              Your HD multi-scene video and Gemini TTS voiceover render <strong>automatically</strong> on page load. Connect your YouTube channel below (via Google Sign-In or the <strong>Instant Domain-Free Token Bypass</strong>) to publish or schedule with built-in anti-ban safeguards.
             </p>
           </div>
 
@@ -347,7 +413,7 @@ export const SeoStep: React.FC<SeoStepProps> = ({
               onClick={() => setShowOAuthGuide((v) => !v)}
               className="px-3.5 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 text-xs font-semibold border border-zinc-700 transition-colors cursor-pointer"
             >
-              {showOAuthGuide ? 'Hide OAuth Status Card' : 'View OAuth Status Card'}
+              {showOAuthGuide ? 'Hide OAuth Domain Guide' : 'Fix Unauthorized Domain Guide'}
             </button>
 
             <button
@@ -384,7 +450,7 @@ export const SeoStep: React.FC<SeoStepProps> = ({
           </div>
         )}
 
-        {/* Collapsible Uploaded OAuth Reference Card */}
+        {/* Collapsible Unauthorized-Domain Fix & OAuth Reference Card */}
         {showOAuthGuide && (
           <div className="p-4 rounded-xl bg-zinc-950 border border-zinc-800 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
             <div className="md:col-span-5 rounded-lg overflow-hidden border border-zinc-800 bg-black">
@@ -394,22 +460,46 @@ export const SeoStep: React.FC<SeoStepProps> = ({
                 className="w-full h-auto object-contain max-h-52"
               />
             </div>
-            <div className="md:col-span-7 space-y-2 text-xs text-zinc-300">
+            <div className="md:col-span-7 space-y-2.5 text-xs text-zinc-300">
               <div className="inline-flex items-center gap-1.5 text-emerald-400 font-bold uppercase tracking-wider text-[11px]">
-                <CheckCircle2 className="w-4 h-4" />
-                Google Cloud OAuth Provisioned &amp; Active
+                <Globe className="w-4 h-4" />
+                How We Solved "Firebase: Error (auth/unauthorized-domain)"
               </div>
               <p className="text-zinc-300 leading-relaxed">
-                Your app is wired to the official client-side Google OAuth 2.0 flow (<code className="text-zinc-200">youtube.upload</code> + <code className="text-zinc-200">youtube.readonly</code>). We never store or expose your Client Secret in browser code.
+                Firebase blocks popups on new domains (like <code className="text-amber-300">{currentHostname}</code>) until that domain is added to Firebase's allowlist. You have <strong>2 ways</strong> to connect right now:
               </p>
-              <ul className="space-y-1 text-zinc-400 list-disc list-inside">
+              <ol className="space-y-1.5 text-zinc-300 list-decimal list-inside">
                 <li>
-                  Ensure <strong>YouTube Data API v3</strong> is enabled in your Google Cloud Console Library.
+                  <strong>Instant Bypass (0 Domain Setup):</strong> Use the <strong>Instant OAuth Token Bypass</strong> box in Section 2 to paste a token from Google OAuth Playground — works on <em>every</em> domain immediately.
                 </li>
                 <li>
-                  Ensure your Google account (<code className="text-zinc-200">ky8402@gmail.com</code>) is listed under <strong>Audience &rarr; Test users</strong> on your OAuth consent screen.
+                  <strong>Permanent Domain Allowlist:</strong> Copy your current domain{' '}
+                  <button
+                    onClick={() => handleCopy(currentHostname, 'host')}
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-800 hover:bg-zinc-700 text-amber-300 font-mono text-[11px]"
+                  >
+                    <span>{currentHostname}</span>
+                    {copiedField === 'host' ? (
+                      <Check className="w-3 h-3 text-emerald-400" />
+                    ) : (
+                      <Copy className="w-3 h-3" />
+                    )}
+                  </button>{' '}
+                  into <strong>Firebase Console &rarr; Authentication &rarr; Settings &rarr; Authorized domains</strong>, and{' '}
+                  <button
+                    onClick={() => handleCopy(currentOrigin, 'origin')}
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-800 hover:bg-zinc-700 text-sky-300 font-mono text-[11px]"
+                  >
+                    <span>{currentOrigin}</span>
+                    {copiedField === 'origin' ? (
+                      <Check className="w-3 h-3 text-emerald-400" />
+                    ) : (
+                      <Copy className="w-3 h-3" />
+                    )}
+                  </button>{' '}
+                  into <strong>Google Cloud Console &rarr; Clients &rarr; Authorized JavaScript origins</strong>.
                 </li>
-              </ul>
+              </ol>
             </div>
           </div>
         )}
@@ -430,12 +520,12 @@ export const SeoStep: React.FC<SeoStepProps> = ({
                     1. Auto-Render Multi-Scene Video + AI Voiceover
                   </h2>
                   <p className="text-xs text-zinc-400">
-                    Stitches your {script.sections.length} script scenes, Ken Burns zoom motion, burned-in captions &amp; Gemini TTS voiceover
+                    Automatically renders your {script.sections.length} script scenes, Ken Burns zoom motion, kinetic captions &amp; Gemini TTS voiceover
                   </p>
                 </div>
               </div>
               <span className="px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-mono">
-                1280x720 HD
+                {renderedVideo ? 'READY' : isRenderingVideo ? 'AUTO-RENDERING' : '1280x720 HD'}
               </span>
             </div>
 
@@ -543,7 +633,7 @@ export const SeoStep: React.FC<SeoStepProps> = ({
               <div className="p-5 rounded-xl bg-zinc-900/50 border border-dashed border-zinc-800 text-center space-y-2">
                 <Play className="w-7 h-7 text-zinc-500 mx-auto" />
                 <p className="text-xs text-zinc-300 font-medium">
-                  Ready to auto-render <strong>"{videoTitle}"</strong>
+                  Auto-rendering <strong>"{videoTitle}"</strong>...
                 </p>
                 <p className="text-[11px] text-zinc-500">
                   Includes {script.sections.length} dynamic visual scenes, kinetic on-screen text, and neural voiceover.
@@ -612,53 +702,112 @@ export const SeoStep: React.FC<SeoStepProps> = ({
 
             {/* Auth Connection Box */}
             {needsAuth ? (
-              <div className="p-5 rounded-xl bg-zinc-900/70 border border-zinc-800 space-y-4">
-                <div className="space-y-1">
-                  <h3 className="text-xs font-bold text-white uppercase tracking-wider">
-                    Connect Your YouTube Channel
-                  </h3>
-                  <p className="text-xs text-zinc-400 leading-relaxed">
-                    Sign in with your Google account to authorize direct video and thumbnail uploads to your YouTube channel with your permission.
-                  </p>
+              <div className="p-4 rounded-xl bg-zinc-900/70 border border-zinc-800 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="space-y-0.5">
+                    <h3 className="text-xs font-bold text-white uppercase tracking-wider">
+                      Option A: 1-Click Google Popup Sign-In
+                    </h3>
+                    <p className="text-[11px] text-zinc-400">
+                      Automatically falls back to Google Identity Services if Firebase domain check triggers.
+                    </p>
+                  </div>
+
+                  {/* Official Google Sign-In Button */}
+                  <button
+                    type="button"
+                    onClick={() => handleGoogleLogin()}
+                    disabled={isLoggingIn}
+                    className="gsi-material-button inline-flex items-center gap-2.5 px-4 py-2 rounded-lg bg-white hover:bg-zinc-100 text-zinc-900 font-semibold text-xs shadow transition-all cursor-pointer disabled:opacity-60 shrink-0"
+                  >
+                    <div className="w-4 h-4 shrink-0">
+                      <svg
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 48 48"
+                        className="w-full h-full block"
+                      >
+                        <path
+                          fill="#EA4335"
+                          d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+                        />
+                        <path
+                          fill="#4285F4"
+                          d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
+                        />
+                        <path
+                          fill="#FBBC05"
+                          d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
+                        />
+                        <path
+                          fill="#34A853"
+                          d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+                        />
+                        <path fill="none" d="M0 0h48v48H0z" />
+                      </svg>
+                    </div>
+                    <span>
+                      {isLoggingIn ? 'Connecting...' : 'Sign in with Google'}
+                    </span>
+                  </button>
                 </div>
 
-                {/* Official Google Sign-In Button per workspace-integration skill */}
-                <button
-                  type="button"
-                  onClick={() => handleGoogleLogin()}
-                  disabled={isLoggingIn}
-                  className="gsi-material-button inline-flex items-center gap-3 px-4 py-2.5 rounded-lg bg-white hover:bg-zinc-100 text-zinc-900 font-semibold text-xs shadow transition-all cursor-pointer disabled:opacity-60"
-                >
-                  <div className="w-4 h-4 shrink-0">
-                    <svg
-                      version="1.1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 48 48"
-                      className="w-full h-full block"
-                    >
-                      <path
-                        fill="#EA4335"
-                        d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+                {/* Option B: Instant Domain-Free Token Bypass (Solves auth/unauthorized-domain on ANY host!) */}
+                {showInstantTokenBypass && (
+                  <div className="pt-3 border-t border-zinc-800 space-y-2.5">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                        <KeyRound className="w-3.5 h-3.5" />
+                        Option B: Instant OAuth Token Bypass (Fixes auth/unauthorized-domain)
+                      </span>
+                      <a
+                        href={OAUTH_PLAYGROUND_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[11px] font-semibold text-sky-400 hover:text-sky-300 flex items-center gap-1"
+                      >
+                        <span>1. Get 10s Token Here</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
+                    <p className="text-[11px] text-zinc-400 leading-relaxed">
+                      Seeing <code className="text-red-300">auth/unauthorized-domain</code> on <code className="text-zinc-200">{currentHostname}</code>? Click <strong>1. Get 10s Token Here</strong> &rarr; click <strong>Authorize APIs</strong> &rarr; click <strong>Exchange authorization code for tokens</strong> &rarr; paste the <code className="text-emerald-300">ya29...</code> Access Token below:
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="password"
+                        value={manualTokenInput}
+                        onChange={(e) => setManualTokenInput(e.target.value)}
+                        placeholder="Paste Google OAuth Access Token (ya29.a0...)"
+                        className="flex-1 px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-xs text-white font-mono focus:outline-none focus:border-emerald-500"
                       />
-                      <path
-                        fill="#4285F4"
-                        d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
-                      />
-                      <path
-                        fill="#FBBC05"
-                        d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
-                      />
-                      <path
-                        fill="#34A853"
-                        d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
-                      />
-                      <path fill="none" d="M0 0h48v48H0z" />
-                    </svg>
+                      <button
+                        type="button"
+                        onClick={handleConnectManualToken}
+                        disabled={!manualTokenInput.trim() || isLoggingIn}
+                        className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white text-xs font-bold shrink-0 cursor-pointer"
+                      >
+                        Connect &amp; Auto-Upload
+                      </button>
+                    </div>
+
+                    {/* Optional Custom OAuth Client ID selector */}
+                    <div className="flex items-center justify-between gap-2 pt-1 text-[11px] text-zinc-500">
+                      <span>Or test direct GIS popup with your Client ID:</span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleGoogleLogin(
+                            selectedClientId || DEFAULT_OAUTH_CLIENT_IDS[1]
+                          )
+                        }
+                        className="text-zinc-300 hover:text-white underline cursor-pointer"
+                      >
+                        Try Direct GIS Popup (923698...eqf8f)
+                      </button>
+                    </div>
                   </div>
-                  <span>
-                    {isLoggingIn ? 'Connecting to YouTube...' : 'Sign in with Google'}
-                  </span>
-                </button>
+                )}
               </div>
             ) : (
               <div className="p-4 rounded-xl bg-zinc-900/80 border border-emerald-500/30 flex items-center justify-between gap-3">
@@ -677,7 +826,7 @@ export const SeoStep: React.FC<SeoStepProps> = ({
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-bold text-white truncate">
-                        {connectedChannel?.title || user?.displayName || 'Connected Google Account'}
+                        {connectedChannel?.title || user?.displayName || 'Connected YouTube Account'}
                       </span>
                       <span className="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 text-[10px] font-semibold">
                         Connected
@@ -686,7 +835,7 @@ export const SeoStep: React.FC<SeoStepProps> = ({
                     <p className="text-[11px] text-zinc-400 truncate">
                       {connectedChannel
                         ? `${connectedChannel.customUrl} • ${connectedChannel.subscriberCount} subs • ${connectedChannel.videoCount} videos`
-                        : user?.email}
+                        : user?.email || 'OAuth Token Active'}
                     </p>
                   </div>
                 </div>
@@ -722,7 +871,7 @@ export const SeoStep: React.FC<SeoStepProps> = ({
               <div className="space-y-1.5">
                 <label className="text-[11px] font-bold uppercase tracking-wider text-zinc-400 flex items-center gap-1">
                   <Calendar className="w-3.5 h-3.5 text-sky-400" />
-                  Auto-Schedule Release (publishAt)
+                  Auto-Schedule Release (Anti-Ban Jitter)
                 </label>
                 <input
                   type="datetime-local"
@@ -735,16 +884,16 @@ export const SeoStep: React.FC<SeoStepProps> = ({
             </div>
 
             {/* Anti-Block Safeguards Summary */}
-            <div className="p-3 rounded-xl bg-zinc-900/50 border border-zinc-800/80 space-y-1.5 text-[11px] text-zinc-400">
+            <div className="p-3 rounded-xl bg-zinc-900/50 border border-zinc-800/80 space-y-1 text-[11px] text-zinc-400">
               <div className="flex items-center justify-between text-zinc-200 font-semibold">
                 <span>Built-In Anti-Block &amp; Policy Safeguards</span>
                 <span className="text-emerald-400 font-mono">ACTIVE</span>
               </div>
               <p>
-                • Uses official <code className="text-zinc-300">googleapis.com/upload/youtube/v3/videos</code> resumable protocol (never browser bots).
+                • Official <code className="text-zinc-300">googleapis.com/upload/youtube/v3/videos</code> resumable API + human-like schedule jitter (+4–9 min offset).
               </p>
               <p>
-                • Automatically sets <code className="text-zinc-300">selfDeclaredMadeForKids: false</code>, attaches your SEO chapters, tags, and custom 16:9 thumbnail.
+                • Auto-sets <code className="text-zinc-300">selfDeclaredMadeForKids: false</code>, caps at 15 clean tags, and appends Original Editorial Disclosure.
               </p>
             </div>
 
@@ -816,9 +965,9 @@ export const SeoStep: React.FC<SeoStepProps> = ({
               <Upload className="w-4 h-4" />
               <span>
                 {needsAuth
-                  ? 'Sign In With Google Above to Enable Auto-Upload'
+                  ? 'Connect Google Account or Paste Instant Token Above'
                   : !activeVideoBlob
-                  ? 'Step 1: Render or Select a Video First'
+                  ? 'Auto-Rendering Video... Please Wait a Moment'
                   : 'Upload Video, SEO & Thumbnail to My YouTube Channel'}
               </span>
             </button>
@@ -836,7 +985,7 @@ export const SeoStep: React.FC<SeoStepProps> = ({
                 3. Automated 6-Video Channel Queue (Safe Daily Quota Scheduler)
               </h2>
               <p className="text-xs text-zinc-400">
-                Select any upcoming video from your 30 Viral Ideas to automatically render its HD video, set its scheduled release date, and queue it to YouTube.
+                Select any upcoming video from your 30 Viral Ideas to automatically render its HD video, apply anti-ban schedule jitter, and queue it to YouTube.
               </p>
             </div>
             <span className="px-3 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-[11px] font-mono text-emerald-400 shrink-0">
@@ -864,7 +1013,7 @@ export const SeoStep: React.FC<SeoStepProps> = ({
                       </span>
                       <span className="text-zinc-400 flex items-center gap-1">
                         <Clock className="w-3 h-3 text-sky-400" />
-                        Day +{daysAhead} (18:00)
+                        Day +{daysAhead} (18:0{4 + ((daysAhead * 3) % 5)})
                       </span>
                     </div>
                     <h3 className="text-xs font-bold text-white leading-snug line-clamp-2">
@@ -944,15 +1093,9 @@ export const SeoStep: React.FC<SeoStepProps> = ({
                 </span>
               </div>
               <div className="flex justify-between gap-4">
-                <span className="text-zinc-400">SEO Tags &amp; Chapters:</span>
-                <span className="text-zinc-200">
-                  {seo.tags.length} tags + Timestamped Description
-                </span>
-              </div>
-              <div className="flex justify-between gap-4">
-                <span className="text-zinc-400">Custom 16:9 Thumbnail:</span>
-                <span className="text-zinc-200">
-                  {thumbnailDataUrl ? 'Included (Auto-Attach)' : 'Default Frame'}
+                <span className="text-zinc-400">Anti-Ban Safeguards:</span>
+                <span className="text-emerald-400 font-semibold">
+                  15 Clean Tags • MadeForKids=false • Editorial Footer
                 </span>
               </div>
             </div>
