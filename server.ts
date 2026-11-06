@@ -1,5 +1,4 @@
 import express, { type Request, type Response } from 'express';
-import { createServer as createViteServer } from 'vite';
 import { GoogleGenAI, Type } from '@google/genai';
 import dotenv from 'dotenv';
 import path from 'path';
@@ -11,7 +10,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const port = parseInt(process.env.PORT || '3000', 10);
+const portArgIdx = process.argv.indexOf('--port');
+const cliPort =
+  portArgIdx !== -1 ? parseInt(process.argv[portArgIdx + 1], 10) : null;
+const port =
+  cliPort ||
+  (process.env.NODE_ENV === 'production' && process.env.PORT
+    ? parseInt(process.env.PORT, 10)
+    : 3000);
 
 app.use(express.json({ limit: '10mb' }));
 
@@ -2147,39 +2153,51 @@ async function startServer() {
 
   if (process.env.NODE_ENV !== 'production') {
     let viteMiddleware: any = null;
-    const viteReady = createViteServer({
-      server: {
-        middlewareMode: true,
-        hmr:
-          process.env.DISABLE_HMR === 'true'
-            ? false
-            : {
-                server: httpServer,
+    let vitePromise: Promise<any> | null = null;
+
+    const ensureVite = () => {
+      if (viteMiddleware) return Promise.resolve(viteMiddleware);
+      if (!vitePromise) {
+        vitePromise = import('vite')
+          .then(({ createServer: createViteServer }) =>
+            createViteServer({
+              server: {
+                middlewareMode: true,
+                hmr:
+                  process.env.DISABLE_HMR === 'true'
+                    ? false
+                    : {
+                        server: httpServer,
+                      },
+                ws: {
+                  server: httpServer,
+                },
+                watch: process.env.DISABLE_HMR === 'true' ? null : {},
               },
-        ws: {
-          server: httpServer,
-        },
-        watch: process.env.DISABLE_HMR === 'true' ? null : {},
-      },
-      appType: 'spa',
-    } as any)
-      .then((vite) => {
-        viteMiddleware = vite.middlewares;
-        return vite;
-      })
-      .catch((err) => {
-        console.error('Vite middleware initialization error:', err);
-        return null;
-      });
+              appType: 'spa',
+            } as any)
+          )
+          .then((vite) => {
+            viteMiddleware = vite.middlewares;
+            return viteMiddleware;
+          })
+          .catch((err) => {
+            console.error('Vite middleware initialization error (will retry):', err.message || err);
+            vitePromise = null;
+            return null;
+          });
+      }
+      return vitePromise;
+    };
+
+    ensureVite();
 
     app.use(async (req, res, next) => {
-      if (!viteMiddleware) {
-        await viteReady;
+      const mw = viteMiddleware || (await ensureVite());
+      if (mw) {
+        return mw(req, res, next);
       }
-      if (viteMiddleware) {
-        return viteMiddleware(req, res, next);
-      }
-      next();
+      res.status(503).send('<!DOCTYPE html><html><head><meta http-equiv="refresh" content="2"></head><body style="background:#09090b;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;">Starting ChannelForge Studio...</body></html>');
     });
   } else {
     app.use(express.static(path.resolve(__dirname, 'dist')));
