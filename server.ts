@@ -2141,6 +2141,10 @@ async function startServer() {
     console.log(`ChannelForge server running on http://0.0.0.0:${port}`);
   });
 
+  httpServer.on('error', (err: any) => {
+    console.error('HTTP server error:', err);
+  });
+
   if (process.env.NODE_ENV !== 'production') {
     let viteMiddleware: any = null;
     const viteReady = createViteServer({
@@ -2158,16 +2162,24 @@ async function startServer() {
         watch: process.env.DISABLE_HMR === 'true' ? null : {},
       },
       appType: 'spa',
-    } as any).then((vite) => {
-      viteMiddleware = vite.middlewares;
-      return vite;
-    });
+    } as any)
+      .then((vite) => {
+        viteMiddleware = vite.middlewares;
+        return vite;
+      })
+      .catch((err) => {
+        console.error('Vite middleware initialization error:', err);
+        return null;
+      });
 
     app.use(async (req, res, next) => {
       if (!viteMiddleware) {
         await viteReady;
       }
-      return viteMiddleware(req, res, next);
+      if (viteMiddleware) {
+        return viteMiddleware(req, res, next);
+      }
+      next();
     });
   } else {
     app.use(express.static(path.resolve(__dirname, 'dist')));
@@ -2177,7 +2189,14 @@ async function startServer() {
   }
 }
 
+process.on('unhandledRejection', (reason) => {
+  console.error('Unhandled Rejection:', reason);
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+});
+
 startServer().catch((err) => {
   console.error('Failed to start server:', err);
-  process.exit(1);
 });
